@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/ivIcon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@null"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/tvAppName"
+        android:layout_width="match_parent"
+        android:layout_height="28dip"
+        android:layout_marginStart="16dip"
+        android:layout_marginTop="16dip"
+        android:layout_toEndOf="@+id/ivIcon"
+        android:gravity="start|center_vertical"
+        android:text="@string/app_name_about"
+        android:textColor="@color/grey"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvVersion"
+        android:layout_width="match_parent"
+        android:layout_height="28dip"
+        android:layout_below="@+id/tvAppName"
+        android:layout_marginStart="16dip"
+        android:layout_toEndOf="@+id/ivIcon"
+        android:gravity="start|center_vertical"
+        android:textColor="@color/grey"
+        android:textSize="14sp" />
+
+    <!--<TextView-->
+        <!--android:id="@+id/tvSplit"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="2dip"-->
+        <!--android:layout_below="@+id/tvVersion"-->
+        <!--android:layout_marginLeft="8dip"-->
+        <!--android:layout_marginRight="8dip"-->
+        <!--android:layout_marginTop="16dip"-->
+        <!--android:background="@color/colorPrimary" />-->
+
+    <TextView
+        android:layout_margin="32dp"
+        android:layout_marginTop="56dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="true"
+        android:autoLink="all"
+        android:layout_below="@+id/tvVersion"
+        android:textColor="@color/grey"
+        android:textSize="14sp"
+        android:text="@string/about_me"/>
+
+
+</RelativeLayout>
