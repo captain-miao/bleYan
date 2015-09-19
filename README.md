@@ -1,5 +1,4 @@
 # bleYan
-Android BLE tools
 
 Welcome to the bleYan wiki!
 ##  1. create Bluetooth Low Energy service
