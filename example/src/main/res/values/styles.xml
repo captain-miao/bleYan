@@ -25,6 +25,6 @@
 
     <style name="AppThemeDark" parent="AppTheme.Base.Dark"/>
     <style name="AppTheme.Base.Dark" parent="Theme.AppCompat.NoActionBar">
-        <item name="cardStyle">@style/CardView.Dark</item>
+        <item name="cardBackgroundColor">@color/background_card</item>
     </style>
 </resources>

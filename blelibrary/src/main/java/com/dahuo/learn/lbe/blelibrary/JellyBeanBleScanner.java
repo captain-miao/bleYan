@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 
+import com.dahuo.learn.lbe.blelibrary.constant.BleScanState;
 import com.dahuo.learn.lbe.blelibrary.utils.BleLog;
 
 /**
@@ -36,12 +37,25 @@ public class JellyBeanBleScanner extends BaseBleScanner {
 
     @SuppressWarnings(value={"deprecation"})
     @Override
-    public void onStartBleScan() {
+    public void onStartBleScan(long timeoutMillis) {
+        long delay = timeoutMillis == 0 ? defaultTimeout : timeoutMillis;
         if(mBluetooth != null) {
+            isScanning = mBluetooth.startLeScan(leScanCallback);
+            timeoutHandler.postDelayed(timeoutRunnable, delay);
+            BleLog.i(TAG, "mBluetooth.startLeScan() " + isScanning);
+        } else {
+            mScanCallback.onBleScanFailed(BleScanState.BLUETOOTH_OFF);//蓝牙 未开启
+        }
+    }
+
+    @SuppressWarnings(value={"deprecation"})
+    @Override
+    public void onStartBleScan( ) {//一直扫描
+        if (mBluetooth != null) {
             isScanning = mBluetooth.startLeScan(leScanCallback);
             BleLog.i(TAG, "mBluetooth.startLeScan() " + isScanning);
         } else {
-            mScanCallback.onBleScanFailed(-1);//蓝牙 未开启
+            mScanCallback.onBleScanFailed(BleScanState.BLUETOOTH_OFF);//蓝牙 未开启
         }
     }
 
@@ -52,5 +66,10 @@ public class JellyBeanBleScanner extends BaseBleScanner {
         if (mBluetooth != null) {
             mBluetooth.stopLeScan(leScanCallback);
         }
+    }
+
+    @Override
+    public void onBleScanFailed(BleScanState scanState) {
+        mScanCallback.onBleScanFailed(scanState);//扫描设备失败~
     }
 }

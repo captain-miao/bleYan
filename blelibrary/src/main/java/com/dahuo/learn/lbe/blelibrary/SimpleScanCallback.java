@@ -2,6 +2,8 @@ package com.dahuo.learn.lbe.blelibrary;
 
 import android.bluetooth.BluetoothDevice;
 
+import com.dahuo.learn.lbe.blelibrary.constant.BleScanState;
+
 /**
  * @author YanLu
  * @since 15/9/14
@@ -23,8 +25,8 @@ public interface SimpleScanCallback {
     /**
      * Callback when scan could not be started.
      *
-     * @param errorCode Error code (one of SCAN_FAILED_*) for scan failure.
+     * @param scanState Error code (one of SCAN_FAILED_*) for scan failure.
      */
-    void onBleScanFailed(int errorCode);
+    void onBleScanFailed(BleScanState scanState);
 
 }

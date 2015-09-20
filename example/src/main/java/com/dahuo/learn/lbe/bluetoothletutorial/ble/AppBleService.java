@@ -8,9 +8,13 @@ import android.bluetooth.BluetoothGattService;
 import com.dahuo.learn.lbe.blelibrary.BaseBleService;
 import com.dahuo.learn.lbe.blelibrary.constant.BleConnectState;
 import com.dahuo.learn.lbe.blelibrary.constant.BleConstants;
+import com.dahuo.learn.lbe.blelibrary.constant.BleScanState;
 import com.dahuo.learn.lbe.blelibrary.utils.BleLog;
 import com.dahuo.learn.lbe.blelibrary.utils.BleUtils;
 import com.dahuo.learn.lbe.blelibrary.utils.HexUtil;
+import com.dahuo.learn.lbe.bluetoothletutorial.app.AppLog;
+
+import java.util.UUID;
 
 
 /**
@@ -20,25 +24,20 @@ import com.dahuo.learn.lbe.blelibrary.utils.HexUtil;
 public class AppBleService extends BaseBleService {
     private final static String TAG = AppBleService.class.getName();
 
-    //发现服务之后，写入保持长连接 for We Coach
+    //发现服务之后，可以做一些初始化
     @Override
     public void onDiscoverServices(BluetoothGatt gatt) {
-        final BluetoothGattService weCoachService = gatt
-				.getService(BleConstants.UUID_WECOACH_SERVICE);
-        if (weCoachService != null) {
-            final BluetoothGattCharacteristic connectConf = weCoachService.getCharacteristic(BleConstants.UUID_CONPRO_CONF2);
+        //for test
+        final BluetoothGattService gattService = gatt
+				.getService(UUID.fromString("E54EAA50-371B-476C-99A3-74d267e3edbe"));
+        if (gattService != null) {
+            final BluetoothGattCharacteristic connectConf =
+                    gattService.getCharacteristic(UUID.fromString("E54EAA55-371B-476C-99A3-74D267E3EDBE"));
             if(connectConf != null) {
-                BleLog.i(TAG, "onDiscoverServices: connectConf()");
-                connectConf.setValue(BleConstants.CONPROMODEL);
+                AppLog.i(TAG, "onDiscoverServices: connectConf()");
+                connectConf.setValue(new byte[]{ (byte) 0x88 });
                 write(connectConf);
             }
-            else {
-                //没有服务 异常了
-                BleUtils.refreshDeviceCache(gatt);
-            }
-        } else {
-            //没有服务 异常了
-            BleUtils.refreshDeviceCache(gatt);
         }
     }
 
@@ -59,25 +58,13 @@ public class AppBleService extends BaseBleService {
                 return;
             }
             BleLog.i(TAG, "onScan " + device + " " + rssi);
-            if (device != null
-                    && device.getName() != null
-                    && device.getName().equals(BleConstants.DEVICE_NAME)) {
+            if (device != null && device.getName() != null) {
 
-                if (rssi < -90) {
+                if (rssi < -90) {//弱信号
                     return;
                 }
 
-                int len = scanRecord.length;
-                if (len <= (10 + 12)) {
-                    return;
-                }
-                // 获取广播中的mac地址
-                String scanHex = HexUtil.encodeHexStr(scanRecord);
-                String mac = scanHex.substring(10, 22);
-                // 如果mac地址和保存的地址不一致，跳过
-                //if (!targetDeviceMac.equalsIgnoreCase(mac)) {
-                //    return;
-                //}
+                //是否 需要去连接~
                 updateState(BleConnectState.CONNECTING);
                 stopScan();
 
@@ -89,10 +76,10 @@ public class AppBleService extends BaseBleService {
 
     /**
      *
-     * @param errorCode Error code (one of SCAN_FAILED_*) for scan failure.
+     * @param scanState Error code (one of SCAN_FAILED_*) for scan failure.
      */
     @Override
-    public void onBleScanFailed(int errorCode) {
+    public void onBleScanFailed(BleScanState scanState) {
 
     }
 }

@@ -12,6 +12,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.umeng.analytics.MobclickAgent;
 
 
 /**
@@ -34,14 +35,6 @@ public abstract class BaseActivity extends AppCompatActivity{
 
         init(savedInstanceState);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        if(toolbar != null) {
-//            setSupportActionBar(toolbar);
-//        }
-//
-//        if(getSupportActionBar() != null) {
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        }
         //KitKat translucent modes
         setTranslucentStatus(this, true);
     }
@@ -49,12 +42,14 @@ public abstract class BaseActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onResume(this);
     }
 
 
     @Override
     protected void onPause() {
         super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override

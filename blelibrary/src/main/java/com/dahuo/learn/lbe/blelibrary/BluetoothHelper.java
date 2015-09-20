@@ -87,12 +87,15 @@ public abstract class BluetoothHelper implements ServiceConnection, AppHandler.H
         }
     }
 
+    public boolean startScanDevice() {
+   		return sendMsgWithoutSubscribe(BleConstants.MSG_CONTROL_ID_START_SCAN);
+   	}
     public boolean stopScanDevice() {
-   		return sendMsgWithoutSubscribe(BleConstants.MSG_STOP_SCAN);
+   		return sendMsgWithoutSubscribe(BleConstants.MSG_CONTROL_ID_STOP_SCAN);
    	}
 
     public boolean disconnectDevice() {
-   		return sendMsgWithoutSubscribe(BleConstants.MSG_DEVICE_DISCONNECT);
+   		return sendMsgWithoutSubscribe(BleConstants.MSG_CONTROL_ID_UNREGISTER);
    	}
 
 
@@ -118,41 +121,16 @@ public abstract class BluetoothHelper implements ServiceConnection, AppHandler.H
         return false;
     }
 
+    public boolean updateCharacteristicNotification(UUID serviceUUID, UUID characteristicUUID, UUID descriptorUUID, boolean enable) {
 
-
-    public boolean sendWriteMsg(Message msg, BleCallback callback) {
+        Message msg = Message.obtain(null, BleConstants.MSG_CONTROL_ID_DESCRIPTOR_NOTIFICATION);
         if (msg != null && mSendMessage != null) {
-            try {
-                mSendMessage.send(msg);
-                if(callback != null) {
-                    mCallbacks.put(callback.uuid, callback);
-                }
-                return true;
-            } catch (RemoteException e) {
-                BleLog.w(TAG, "Lost connection to service" + e.toString());
-            }
-        }
-        return false;
-    }
-    public boolean sendReceiveNotifyData(Message msg, BleCallback callback) {
-        if (msg != null && mSendMessage != null) {
-            try {
-                msg.replyTo = mReceiveMessenger;
-                mSendMessage.send(msg);
-                if(callback != null) {
-                    mCallbacks.put(callback.uuid, callback);
-                }
-                return true;
-            } catch (RemoteException e) {
-                BleLog.w(TAG, "Lost connection to service" + e.toString());
-            }
-        }
-        return false;
-    }
-    public boolean sendWriteMsg(Message msg) {
-
-       // Message msg = Message.obtain(null, msgId);
-        if (msg != null && mSendMessage != null) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(BleConstants.BLE_MSG_SERVICE_UUID_KEY, serviceUUID);
+            bundle.putSerializable(BleConstants.BLE_MSG_CHARACTERISTIC_UUID_KEY, characteristicUUID);
+            bundle.putSerializable(BleConstants.BLE_MSG_DESCRIPTOR_UUID_KEY, descriptorUUID);
+            bundle.putBoolean(BleConstants.BLE_MSG_ENABLE_KEY, enable);
+            msg.setData(bundle);
             try {
                 //msg.replyTo = mReceiveMessenger;
                 mSendMessage.send(msg);
@@ -163,6 +141,26 @@ public abstract class BluetoothHelper implements ServiceConnection, AppHandler.H
         }
         return false;
     }
+
+    public boolean readFromCharacteristic(UUID serviceUUID, UUID CharacteristicUUID) {
+
+        Message msg = Message.obtain(null, BleConstants.MSG_CONTROL_ID_READ_CHARACTERISTIC);
+        if (msg != null && mSendMessage != null) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(BleConstants.BLE_MSG_SERVICE_UUID_KEY, serviceUUID);
+            bundle.putSerializable(BleConstants.BLE_MSG_CHARACTERISTIC_UUID_KEY, CharacteristicUUID);
+            msg.setData(bundle);
+            try {
+                //msg.replyTo = mReceiveMessenger;
+                mSendMessage.send(msg);
+                return true;
+            } catch (RemoteException e) {
+                BleLog.w(TAG, "Lost connection to service" + e.toString());
+            }
+        }
+        return false;
+    }
+
 
     public boolean sendMsgAndSubscribe(int msgId) {
 
@@ -205,10 +203,10 @@ public abstract class BluetoothHelper implements ServiceConnection, AppHandler.H
                 }
                 mState = newStatus;
                 if (mConnCallback != null) {
-                    if (mState == BleConnectState.SERVICE_IS_COVERED) {
+                    if (mState == BleConnectState.SERVICE_IS_DISCOVERED) {
                         appHandler.removeCallbacks(mConnectTimeout);
                         mConnCallback.onConnectSuccess();
-                    } else if (mState == BleConnectState.SERVICE_IS_NOT_COVERED) {
+                    } else if (mState == BleConnectState.SERVICE_IS_NOT_DISCOVERED) {
                         appHandler.removeCallbacks(mConnectTimeout);
                         mConnCallback.onConnectFailed(ConnectError.InvalidStatus);
                     } else if (mState == BleConnectState.DISCONNECTED) {
@@ -229,10 +227,6 @@ public abstract class BluetoothHelper implements ServiceConnection, AppHandler.H
                 if (data != null && mBleCallback != null) {
                     UUID uuid = (UUID) data.getSerializable(BleConstants.BLE_MSG_CHARACTERISTIC_UUID_KEY);
                     mBleCallback.onCharacteristicWrite(uuid, msg.arg1);
-                    //BleCallback callback = mCallbacks.get(characteristicUUID);
-                    //if (callback != null && callback.uuid.equals(characteristicUUID)) {
-                    //    callback.onCharacteristicWrite(msg.arg1);
-                    //}
                 }
                 break;
             }
@@ -242,10 +236,6 @@ public abstract class BluetoothHelper implements ServiceConnection, AppHandler.H
                 if (data != null && mBleCallback != null) {
                     UUID uuid = (UUID) data.getSerializable(BleConstants.BLE_MSG_CHARACTERISTIC_UUID_KEY);
                     mBleCallback.onDescriptorWrite(uuid, msg.arg1);
-                    //BleCallback callback = mCallbacks.get(characteristicUUID);
-                    //if (callback != null && callback.uuid.equals(characteristicUUID)) {
-                    //    callback.onDescriptorWrite(msg.arg1);
-                    //}
                 }
                 break;
             }
@@ -254,10 +244,6 @@ public abstract class BluetoothHelper implements ServiceConnection, AppHandler.H
                 if (data != null && mBleCallback != null) {
                     UUID uuid = (UUID) data.getSerializable(BleConstants.BLE_MSG_CHARACTERISTIC_UUID_KEY);
                     mBleCallback.onCharacteristicNotification(uuid, (byte[]) msg.obj);
-                    //BleCallback callback = mCallbacks.get(characteristicUUID);
-                    //if (callback != null && callback.uuid.equals(characteristicUUID)) {
-                    //    callback.onCharacteristicNotification(((byte[]) msg.obj));
-                    //}
                 }
                 break;
             }
@@ -266,10 +252,6 @@ public abstract class BluetoothHelper implements ServiceConnection, AppHandler.H
                 if (data != null && mBleCallback != null) {
                     UUID uuid = (UUID) data.getSerializable(BleConstants.BLE_MSG_CHARACTERISTIC_UUID_KEY);
                     mBleCallback.onCharacteristicRead(uuid, (byte[]) msg.obj);
-                    //BleCallback callback = mCallbacks.get(characteristicUUID);
-                    //if (callback != null && callback.uuid.equals(characteristicUUID)) {
-                    //    callback.onCharacteristicRead(((byte[]) msg.obj));
-                    //}
                 }
                 break;
             }
@@ -278,10 +260,6 @@ public abstract class BluetoothHelper implements ServiceConnection, AppHandler.H
                 if (data != null && mBleCallback != null) {
                     UUID uuid = (UUID) data.getSerializable(BleConstants.BLE_MSG_CHARACTERISTIC_UUID_KEY);
                     mBleCallback.onDescriptorRead(uuid, (byte[]) msg.obj);
-                    //BleCallback callback = mCallbacks.get(characteristicUUID);
-                    //if (callback != null && callback.uuid.equals(characteristicUUID)) {
-                    //    callback.onDescriptorRead(((byte[]) msg.obj));
-                    //}
                 }
                 break;
             }
@@ -290,11 +268,6 @@ public abstract class BluetoothHelper implements ServiceConnection, AppHandler.H
                 if(mBleCallback != null){
                     mBleCallback.onReliableWriteCompleted(msg.arg1);
                 }
-//                for (BleCallback callback : mCallbacks.values()) {
-//                    if(callback != null) {
-//                        callback.onReliableWriteCompleted(msg.arg1);
-//                    }
-//                }
                 break;
             }
             case BleConstants.MSG_BLE_ID_READ_REMOTE_RSSI: {
@@ -302,11 +275,6 @@ public abstract class BluetoothHelper implements ServiceConnection, AppHandler.H
                 if(mBleCallback != null){
                     mBleCallback.onReadRemoteRssi(msg.arg2, msg.arg1);
                 }
-//                for (BleCallback callback : mCallbacks.values()) {
-//                    if(callback != null) {
-//                        callback.onReadRemoteRssi(msg.arg2, msg.arg1);
-//                    }
-//                }
                 break;
             }
             case BleConstants.MSG_BLE_ID_MTU_CHANGED: {
@@ -314,11 +282,6 @@ public abstract class BluetoothHelper implements ServiceConnection, AppHandler.H
                 if(mBleCallback != null){
                     mBleCallback.onMtuChanged(msg.arg2, msg.arg1);
                 }
-//                for (BleCallback callback : mCallbacks.values()) {
-//                    if(callback != null) {
-//                        callback.onMtuChanged(msg.arg2, msg.arg1);
-//                    }
-//                }
                 break;
             }
             case BleConstants.MSG_BLE_ID_SERVICES_DISCOVERED: {

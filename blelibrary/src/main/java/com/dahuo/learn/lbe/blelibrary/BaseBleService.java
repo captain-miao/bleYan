@@ -79,11 +79,11 @@ public abstract class BaseBleService extends Service implements SimpleScanCallba
 			if (status == BluetoothGatt.GATT_SUCCESS) {
 				onDiscoverServices(gatt);
 				//需要返回 gatt
-				updateState(BleConnectState.SERVICE_IS_COVERED);
+				updateState(BleConnectState.SERVICE_IS_DISCOVERED);
 			} else {
 				BleUtils.refreshDeviceCache(mGatt);
 				//失败 需要做何处理 129
-				if(mState != BleConnectState.SERVICE_IS_NOT_COVERED) {
+				if(mState != BleConnectState.SERVICE_IS_NOT_DISCOVERED) {
                     updateState(mState);
                 }
 			}
@@ -361,6 +361,10 @@ public abstract class BaseBleService extends Service implements SimpleScanCallba
 	}
 
 	private synchronized void nextWrite() {
+		//empty enable write
+		if(sIsWriting) {
+			sIsWriting = !sWriteQueue.isEmpty();
+		}
 		if (!sWriteQueue.isEmpty() && !sIsWriting) {
 			doWrite(sWriteQueue.poll());
 		}
@@ -368,11 +372,9 @@ public abstract class BaseBleService extends Service implements SimpleScanCallba
 
 	private synchronized void doWrite(Object o) {
 		if (o instanceof BluetoothGattCharacteristic) {
-			sIsWriting = true;
-			mGatt.writeCharacteristic((BluetoothGattCharacteristic) o);
+			sIsWriting = mGatt.writeCharacteristic((BluetoothGattCharacteristic) o);
 		} else if (o instanceof BluetoothGattDescriptor) {
-			sIsWriting = true;
-			mGatt.writeDescriptor((BluetoothGattDescriptor) o);
+			sIsWriting = mGatt.writeDescriptor((BluetoothGattDescriptor) o);
 		} else {
 			nextWrite();
 		}

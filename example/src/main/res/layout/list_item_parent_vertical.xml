@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/margin_medium"
+    android:layout_marginRight="@dimen/margin_medium"
+    android:layout_marginTop="@dimen/margin_medium"
+    android:background="@drawable/background_list_item_parent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_parent_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/list_item_parent_marginLeft"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_header" />
+
+        <TextView
+            android:id="@+id/tv_parent_uuid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/list_item_parent_marginLeft"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_header" />
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/list_item_parent_horizontal_arrow_imageView"
+        android:layout_width="@dimen/list_item_parent_arrow_size"
+        android:layout_height="@dimen/list_item_parent_arrow_size"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:contentDescription="@string/arrow_contentDescription"
+        android:src="@drawable/selector_arrow_down" />
+
+</LinearLayout>

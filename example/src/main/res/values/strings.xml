@@ -1,24 +1,24 @@
 <resources>
-    <string name="app_name">BleYan</string>
+    <string name="app_name">bleYan</string>
 
     <string name="ble_unknown">unknown</string>
     <string name="ble_mac_label" formatted="false">Mac: \t%s</string>
     <string name="ble_dbm_label" formatted="false">dBm: \t%d</string>
-    <string name="ble_broadcast_label" formatted="false">广播包: \r\n%s</string>
-    <string name="app_loading">处理中…</string>
+    <string name="ble_broadcast_label" formatted="false">Scan Record: \r\n%s</string>
+    <string name="app_loading">processing…</string>
 
-    <string name="app_home">首页</string>
-    <string name="app_ble_scan_start">扫描</string>
-    <string name="app_ble_scan_stop">停止</string>
+    <string name="app_home">Home</string>
+    <string name="app_ble_scan_start">Scan</string>
+    <string name="app_ble_scan_stop">Stop</string>
 
-    <string name="app_open_source">开源库</string>
-    <string name="app_about">关于</string>
+    <string name="app_open_source">Git Open Source</string>
+    <string name="app_about">About</string>
     <string name="app_name_about">@string/app_name</string>
-    <string name="app_version_about" formatted="false">版本: %s</string>
+    <string name="app_version_about" formatted="false">Version: %s</string>
     <string name="feedback">反馈</string>
     <string name="about_me_email">captain_miao@163.com</string>
     <string name="about_me_name" >Yan Lu</string>
-    <string name="about_me">邮箱：captain_miao@163.com \r\n\r\n\r\n博客：http://yanlu.me \r\n\r\n\r\n微信：c16916</string>
+    <string name="about_me">E-mail：captain_miao@163.com \r\n\r\n\r\nBlog：http://yanlu.me \r\n\r\n\r\nWeChat：c16916</string>
 
 
 
@@ -26,7 +26,7 @@
     <string name="action_settings">Settings</string>
 
     <!-- Drawer Items -->
-    <string name="drawer_item_compact_header">首页</string>
+    <string name="drawer_item_compact_header">Home</string>
     <string name="drawer_item_action_bar">ActionBar Drawer</string>
     <string name="drawer_item_multi_drawer">Multi Drawer</string>
     <string name="drawer_item_non_translucent_status_drawer">NonTranslucentStatus Drawer</string>
@@ -44,18 +44,26 @@
     <string name="drawer_item_section_header">Section Header</string>
     <string name="drawer_item_settings">Settings</string>
     <string name="drawer_item_help">Help</string>
-    <string name="drawer_item_open_source">开源库</string>
-    <string name="drawer_item_about">关于</string>
 
     <string name="unknown_device">Unknown device</string>
     <string name="unknown_characteristic">Unknown characteristic</string>
     <string name="unknown_service">Unknown service</string>
 
+    <string name="label_write_data">Write: </string>
+    <string name="label_read_data">Read Characteristic</string>
+    <string name="label_notify_data">Notify: </string>
+    <string name="label_write_data_hint">input hex</string>
     <string name="label_data">Data:</string>
-    <string name="label_device_address">Device address:</string>
+    <string name="label_device_address">address:</string>
     <string name="label_state">State:</string>
     <string name="no_data">No data</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
     <string name="title_devices">BLE Device Scan</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="label_ok">Ok</string>
+
+    <string name="label_lbe_permissions" formatted="false">Permissions:\t%s</string>
+    <string name="label_lbe_properties" formatted="false">Properties:\t%s</string>
+    <string name="label_lbe_write_type" formatted="false">WriteType:\t%s</string>
 </resources>

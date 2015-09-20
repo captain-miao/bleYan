@@ -9,4 +9,8 @@
 
     <color name="progress_bar_color">#ff2942</color>
     <color name="progress_bar_background_light">#FFFAFAFA</color>
+
+    <color name="primary_green">#8BC34A</color>
+    <color name="white">#FFFFFF</color>
+    <color name="background_card">#2a434a</color>
 </resources>

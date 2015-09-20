@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.dahuo.learn.lbe.bluetoothletutorial.BleDeviceActivity;
 import com.dahuo.learn.lbe.bluetoothletutorial.R;
+import com.dahuo.learn.lbe.bluetoothletutorial.constant.AppConstants;
 import com.dahuo.learn.lbe.bluetoothletutorial.model.BleDevice;
 import com.dahuo.learn.lbe.supportsdk.refresh.BaseLoadMoreRecyclerAdapter;
 
@@ -40,7 +41,7 @@ public class BleDeviceAdapter extends BaseLoadMoreRecyclerAdapter<BleDevice, Ble
             public void onClick(View v) {
                 int position = mRecyclerView.getChildAdapterPosition(v);
                 mContext.startActivity(new Intent(mContext, BleDeviceActivity.class)
-                .putExtra("bleDevice", getItem(position)));
+                .putExtra(AppConstants.KEY_BLE_DEVICE, getItem(position)));
             }
         });
         return new BleDeviceAdapter.ItemViewHolder(view);

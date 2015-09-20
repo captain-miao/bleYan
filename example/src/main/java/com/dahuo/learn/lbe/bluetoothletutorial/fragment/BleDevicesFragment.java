@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.dahuo.learn.lbe.blelibrary.BleScanner;
 import com.dahuo.learn.lbe.blelibrary.SimpleScanCallback;
+import com.dahuo.learn.lbe.blelibrary.constant.BleScanState;
 import com.dahuo.learn.lbe.blelibrary.utils.BleLog;
 import com.dahuo.learn.lbe.blelibrary.utils.HexUtil;
 import com.dahuo.learn.lbe.bluetoothletutorial.R;
@@ -94,13 +95,13 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
                 }
                 bleDeviceHashMap.clear();
                 mAdapter.clear();
+                mAdapter.notifyDataSetChanged();
                 mBleScanner.startBleScan();
                 //
                 mSwipeRefreshLayout.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         mSwipeRefreshLayout.setRefreshing(false);
-                        mAdapter.notifyDataSetChanged();
                     }
                 }, 1000);//1秒
             }
@@ -156,6 +157,7 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
                     item.setTitle(R.string.app_ble_scan_stop);
                     bleDeviceHashMap.clear();
                     mAdapter.clear();
+                    mAdapter.notifyDataSetChanged();
                     mBleScanner.startBleScan();
                 }
                 break;
@@ -172,7 +174,11 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
                 if (bleDeviceHashMap.get(device.getAddress()) == null) {
                     bleDeviceHashMap.put(device.getAddress(), device);
                     mAdapter.append(new BleDevice(device.getName(), device.getAddress(), rssi, HexUtil.encodeHexStr(scanRecord)));
-                    mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
+                    try {
+                        mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
                 } else {
                     //更新rssi
                     List<BleDevice> mList = mAdapter.getList();
@@ -186,7 +192,11 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
                                 bleDevice.updateTime = now;
                                 bleDevice.rssi = rssi;
                                 bleDevice.broadcast = HexUtil.encodeHexStr(scanRecord);
-                                mAdapter.notifyItemChanged(i);
+                                try {
+                                    mAdapter.notifyItemChanged(i);
+                                } catch (Exception e){
+                                    e.printStackTrace();
+                                }
                                 //mAdapter.notifyDataSetChanged();
                             }
                             break;
@@ -199,8 +209,8 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
     }
 
     @Override
-    public void onBleScanFailed(int errorCode) {
-        Toast.makeText(getContext(), "开启扫描失败...", Toast.LENGTH_LONG).show();
+    public void onBleScanFailed(BleScanState scanState) {
+        Toast.makeText(getContext(), scanState.getMessage(), Toast.LENGTH_LONG).show();
     }
 
 

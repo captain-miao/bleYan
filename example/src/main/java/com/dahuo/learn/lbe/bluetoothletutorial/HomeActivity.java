@@ -10,11 +10,13 @@ import android.view.WindowManager;
 
 import com.dahuo.learn.lbe.bluetoothletutorial.fragment.AboutFragment;
 import com.dahuo.learn.lbe.bluetoothletutorial.fragment.BleDevicesFragment;
+import com.dahuo.learn.lbe.supportsdk.app.AppUpgrade;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.umeng.analytics.MobclickAgent;
 
 import it.neokree.materialnavigationdrawer.MaterialNavigationDrawer;
 import it.neokree.materialnavigationdrawer.elements.MaterialAccount;
@@ -74,6 +76,8 @@ public class HomeActivity extends MaterialNavigationDrawer implements MaterialAc
         this.setBackPattern(MaterialNavigationDrawer.BACKPATTERN_BACK_TO_FIRST);
         //allowArrowAnimation();
         enableToolbarElevation();
+
+        AppUpgrade.update(this);//版本更新
     }
 
 
@@ -107,5 +111,17 @@ public class HomeActivity extends MaterialNavigationDrawer implements MaterialAc
     @Override
     public void onChangeAccount(MaterialAccount materialAccount) {
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

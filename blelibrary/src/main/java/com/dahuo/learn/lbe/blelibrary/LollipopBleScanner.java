@@ -7,6 +7,7 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.os.Build;
 
+import com.dahuo.learn.lbe.blelibrary.constant.BleScanState;
 import com.dahuo.learn.lbe.blelibrary.utils.BleLog;
 
 import java.util.List;
@@ -34,6 +35,19 @@ public class LollipopBleScanner extends BaseBleScanner {
         }
     }
 
+    @SuppressWarnings(value = {"deprecation"})
+    @Override
+    public void onStartBleScan(long timeoutMillis) {
+        long delay = timeoutMillis == 0 ? defaultTimeout : timeoutMillis;
+        if (mBluetoothScanner != null) {
+            mBluetoothScanner.startScan(scanCallback);
+            isScanning = true;
+            timeoutHandler.postDelayed(timeoutRunnable, delay);
+        } else {
+            mScanCallback.onBleScanFailed(BleScanState.BLUETOOTH_OFF);//蓝牙 未开启
+        }
+        BleLog.i(TAG, "mBluetoothScanner.startScan()");
+    }
 
     @SuppressWarnings(value = {"deprecation"})
     @Override
@@ -42,7 +56,7 @@ public class LollipopBleScanner extends BaseBleScanner {
             mBluetoothScanner.startScan(scanCallback);
             isScanning = true;
         } else {
-            mScanCallback.onBleScanFailed(-1);//蓝牙 未开启
+            mScanCallback.onBleScanFailed(BleScanState.BLUETOOTH_OFF);//蓝牙 未开启
         }
         BleLog.i(TAG, "mBluetoothScanner.startScan()");
     }
@@ -56,6 +70,11 @@ public class LollipopBleScanner extends BaseBleScanner {
         }
     }
 
+
+    @Override
+    public void onBleScanFailed(BleScanState scanState) {
+        mScanCallback.onBleScanFailed(scanState);//扫描设备超时~
+    }
 
     private ScanCallback scanCallback = new ScanCallback() {
         @Override
@@ -75,10 +94,11 @@ public class LollipopBleScanner extends BaseBleScanner {
 
         @Override
         public void onScanFailed(int errorCode) {
-            super.onScanFailed(errorCode);
-            BleLog.i(TAG, "onScanFailed: " + errorCode);
-            mScanCallback.onBleScanFailed(errorCode);
-            //onStopBleScan();
+            //会返回 错误码 3 忽略
+            if(errorCode != 3 && errorCode != 1 ) {
+                BleLog.i(TAG, "onScanFailed: " + errorCode);
+                mScanCallback.onBleScanFailed(BleScanState.newInstance(errorCode));
+            }
         }
     };
 }

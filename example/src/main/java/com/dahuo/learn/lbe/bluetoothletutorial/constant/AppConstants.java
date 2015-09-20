@@ -13,5 +13,9 @@ public class AppConstants {
     public static final String KEY_ID = "key_id";
     public static final String KEY_IS_BOOLEAN = "key_boolean";
 
+    public static final String KEY_BLE_DEVICE = "key_ble_device";
+    public static final String KEY_BLE_SERVICE = "key_ble_service";
+    public static final String KEY_BLE_CHARACTERISTIC = "key_ble_characteristic";
+
 
 }

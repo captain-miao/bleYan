@@ -43,13 +43,23 @@ public class BleServiceHandle extends AppHandler<BaseBleService> {
 					//service.sendBleStateMessage();
 					break;
 				case BleConstants.MSG_CONTROL_ID_UNREGISTER:
-					BleLog.i(TAG, "BleService Unregistered");
+					BleLog.i(TAG, "client unregistered");
 					if (msg.replyTo != null) {
 						reference.removeClient(msg.replyTo);
 					}
 					break;
 
 
+				case BleConstants.MSG_CONTROL_ID_START_SCAN: {
+					BleLog.i(TAG, "start scan...");
+					reference.startScan();
+					break;
+				}
+				case BleConstants.MSG_CONTROL_ID_STOP_SCAN: {
+					BleLog.i(TAG, "start scan...");
+					reference.stopScan();
+					break;
+				}
 				case BleConstants.MSG_CONTROL_ID_CONNECT_DEVICE: {
 					BluetoothDevice device = data.getParcelable(BleConstants.BLE_MSG_BLE_DEVICE_KEY);
 					reference.connectDevice(device);

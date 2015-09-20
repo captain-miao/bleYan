@@ -7,26 +7,26 @@ package com.dahuo.learn.lbe.blelibrary.constant;
 
 public enum BleConnectState {
 
-    INITIALED(0, "蓝牙未连接"),
-    SCANNING(1, "扫描中"),
-    CONNECTING(2, "设备连接中"),
-    CONNECTED(3, "设备已连接"),
-    SERVICE_IS_COVERING(4, "服务发现中"),
-    SERVICE_IS_COVERED(5, "已发现服务"),
-    DISCONNECTING(6, "连接已断开"),
-    DISCONNECTED(7, "连接已断开"),
-    BLUETOOTH_OFF(8, "蓝牙关闭"),
-    SERVICE_IS_NOT_COVERED(9, "服务发现失败");
+    INITIALED(0, "BLE initialed"),
+    SCANNING(1, "Scanning"),
+    CONNECTING(2, "Connecting"),
+    CONNECTED(3, "Connect"),
+    SERVICE_IS_DISCOVERING(4, "Services discovering"),
+    SERVICE_IS_DISCOVERED(5, "Services discovered"),
+    DISCONNECTING(6, "Disconnecting"),
+    DISCONNECTED(7, "Disconnected"),
+    BLUETOOTH_OFF(8, "Bluetooth_off"),
+    SERVICE_IS_NOT_DISCOVERED(9, "Services discover failed");
 
     public boolean isBluetoothOff() {
         return this == BLUETOOTH_OFF;
     }
     public boolean isServiceDiscovered() {
-        return this == SERVICE_IS_COVERED;
+        return this == SERVICE_IS_DISCOVERED;
     }
 
     public boolean isConnecting() {
-        return this.code > INITIALED.code && this.code < SERVICE_IS_COVERED.code;
+        return this.code > INITIALED.code && this.code < SERVICE_IS_DISCOVERED.code;
     }
 
     public boolean needConnect() {
@@ -36,8 +36,8 @@ public enum BleConnectState {
 
     public boolean isConnected() {
         return this.code == CONNECTED.code
-                || this.code == SERVICE_IS_COVERING.code
-                || this.code == SERVICE_IS_COVERED.code;
+                || this.code == SERVICE_IS_DISCOVERING.code
+                || this.code == SERVICE_IS_DISCOVERED.code;
     }
 
     BleConnectState(int code, String message) {
@@ -75,9 +75,9 @@ public enum BleConnectState {
             case 3:
                 return BleConnectState.CONNECTING;
             case 4:
-                return BleConnectState.SERVICE_IS_COVERING;
+                return BleConnectState.SERVICE_IS_DISCOVERING;
             case 5:
-                return BleConnectState.SERVICE_IS_COVERED;
+                return BleConnectState.SERVICE_IS_DISCOVERED;
             case 6:
                 return BleConnectState.DISCONNECTING;
             case 7:
@@ -85,7 +85,7 @@ public enum BleConnectState {
             case 8:
                 return BleConnectState.BLUETOOTH_OFF;
             case 9:
-                return BleConnectState.SERVICE_IS_NOT_COVERED;
+                return BleConnectState.SERVICE_IS_NOT_DISCOVERED;
             default:
                 return BleConnectState.INITIALED;
         }

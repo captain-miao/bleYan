@@ -7,7 +7,7 @@ package com.dahuo.learn.lbe.blelibrary.constant;
 
 public enum ConnectError {
 
-    Invalidmac(-1, "非法的mac地址"),
+    InvalidMac(-1, "非法的mac地址"),
     ScanTimeout(-2, "扫描超时:未发现设备"),
     ConnectTimeout(-3, "蓝牙连接超时"),
     ServiceDiscoverTimeout(-4, "蓝牙服务发现超时"),
@@ -15,14 +15,6 @@ public enum ConnectError {
     InvalidStatus(-6, "蓝牙状态不对，尝试重启吧"),
     WriteTimeout(-7, "蓝牙超时"),
     ReadTimeout(-8, "蓝牙超时");
-//    Invalidmac(-1, "非法的mac地址"),
-//    ScanTimeout(-2, "扫描超时:未发现设备"),
-//    ConnectTimeout(-3, "蓝牙连接超时"),
-//    ServiceDiscoverTimeout(-4, "服务发现超时"),
-//    CharNotFound(-7, "未发现指定通道"),
-//    InvalidStatus(-6, "错误的蓝牙状态"),
-//    WriteTimeout(-7, "写入超时"),
-//    ReadTimeout(-8, "读取超时");
 
 
     ConnectError(int code, String message) {
