@@ -131,6 +131,10 @@ mBleHelper = new AppBluetoothHelper(Context context, BleCallback bleCallback);
 	 
 	}
 ```
+##4.release Bluetooth Device
+```
+	mBleHelper.release();
+```
 usage(Chinese):https://yanlu.me/android-bluetooth-low-energy/  
 apk download:http://fir.im/bleYan  
 QQ Group:124884323
