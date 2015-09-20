@@ -67,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/label_data"
+            android:text="@string/label_notify_characteristic_data"
             android:textSize="18sp" />
 
         <android.support.v7.widget.AppCompatButton
