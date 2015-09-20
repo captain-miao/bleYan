@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name = "cardStyle">
+         <attr name="cardStyle" format="reference" />
+    </declare-styleable>
+
+    <style name="Light" parent="Theme.AppCompat.NoActionBar">
+        <item name="cardStyle">@style/CardView.Light</item>
+    </style>
+
+    <style name="Dark" parent="Theme.AppCompat.NoActionBar">
+        <item name="cardStyle">@style/CardView.Dark</item>
+    </style>
+
+</resources>

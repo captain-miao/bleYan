@@ -1,0 +1,35 @@
+<resources>
+    <string name="sdk_name">SupportSDK</string>
+
+    <string name="app_loading">加载中…</string>
+    <string name="app_loading_more">加载中…</string>
+    <string name="app_no_more_data">没有更多数据了…</string>
+
+
+    <!-- Main screen -->
+    <string name="activity_main_vertical_linear_sample_button">Vertical Linear Sample</string>
+    <string name="activity_main_horizontal_linear_sample_button">Horizontal Linear Sample</string>
+    <string name="activity_main_grid_sample_button">Grid Layout Sample</string>
+    <string name="activity_main_header">Expanding RecyclerView</string>
+    <string name="coming_soon">Feature coming soon</string>
+
+    <!-- Linear sample -->
+    <string name="activity_vertical_linear_sample_title">Vertical Linear Sample</string>
+    <string name="activity_horizontal_linear_sample_title">Horizontal Linear Sample</string>
+    <string name="toolbar_sample_checkBox">Custom Expand Button</string>
+    <string name="child_text">Child %1$d</string>
+    <string name="second_child_text">Child %1$d_2</string>
+    <string name="parent_text">Parent %1$d</string>
+    <string name="arrow_contentDescription">Expand list item arrow</string>
+    <string name="item_expanded">Item %1$d expanded</string>
+    <string name="item_collapsed">Item %1$d collapsed</string>
+    <string name="expand_parent_two">Expand parent 2</string>
+    <string name="collapse_parent_two">Collapse parent 2</string>
+    <string name="expand_all">Expand all parents</string>
+    <string name="collapse_all">Collapse all parents</string>
+
+    <!-- Sample Toolbar -->
+    <string name="no_animation">No animation</string>
+    <string name="spinner_adapter_time_s">1 s</string>
+    <string name="spinner_adapter_time_ms">%1$d ms</string>
+</resources>
