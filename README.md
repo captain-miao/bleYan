@@ -2,8 +2,8 @@
 
 Welcome to the bleYan wiki!
 ##  0. bleYan tools
-![Alt text](/ble_scan_screenshot.jpg?raw=true "ble_scan_screenshot")
-![Alt text](/ble_write_read_screenshot.jpg?raw=true "ble_scan_screenshot")
+![Alt text](/screenshot/ble_scan_screenshot.jpg?raw=true "ble_scan_screenshot")
+![Alt text](/screenshot/ble_write_read_screenshot.jpg?raw=true "ble_scan_screenshot")
 ##  1. create Bluetooth Low Energy service
 ```
 public class AppBleService extends BaseBleService {
