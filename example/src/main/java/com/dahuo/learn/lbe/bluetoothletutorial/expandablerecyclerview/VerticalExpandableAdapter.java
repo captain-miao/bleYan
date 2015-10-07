@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
+import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 import com.dahuo.learn.lbe.bluetoothletutorial.R;
 import com.dahuo.learn.lbe.bluetoothletutorial.app.AppLog;
 
@@ -29,9 +29,19 @@ public abstract class VerticalExpandableAdapter extends ExpandableRecyclerAdapte
      * @param context for inflating views
      * @param parentItemList the list of parent items to be displayed in the RecyclerView
      */
-    public VerticalExpandableAdapter(Context context, List<ParentObject> parentItemList) {
+    public VerticalExpandableAdapter(Context context, List<ParentListItem> parentItemList) {
         super(context, parentItemList);
         mInflater = LayoutInflater.from(context);
+    }
+
+    @Override
+    public void onListItemExpanded(int position) {
+
+    }
+
+    @Override
+    public void onListItemCollapsed(int position) {
+
     }
 
     /**

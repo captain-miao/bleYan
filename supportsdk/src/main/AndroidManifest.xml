@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
 
-    <application android:label="@string/sdk_name">
+    <application>
         <!-- umeng -->
         <meta-data
             android:name="UMENG_APPKEY"

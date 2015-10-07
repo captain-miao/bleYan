@@ -6,10 +6,9 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
 import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapterHelper;
-import com.bignerdranch.expandablerecyclerview.Listener.ExpandCollapseListener;
-import com.bignerdranch.expandablerecyclerview.Listener.ParentItemExpandCollapseListener;
-import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
+import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 import com.bignerdranch.expandablerecyclerview.Model.ParentWrapper;
 import com.bignerdranch.expandablerecyclerview.ViewHolder.ChildViewHolder;
 import com.bignerdranch.expandablerecyclerview.ViewHolder.ParentViewHolder;
@@ -28,16 +27,16 @@ import java.util.List;
  * @version 1.0
  * @since 5/27/2015
  */
-public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, CVH extends ChildViewHolder> extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ParentItemExpandCollapseListener {
+public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, CVH extends ChildViewHolder> extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ExpandableRecyclerAdapter.ExpandCollapseListener, ParentViewHolder.ParentListItemExpandCollapseListener {
 
     private static final String EXPANDED_STATE_MAP = "ExpandableRecyclerAdapter.ExpandedStateMap";
     private static final int TYPE_PARENT = 0;
     private static final int TYPE_CHILD = 1;
 
     protected Context mContext;
-    protected List<? extends ParentObject> mParentItemList;
+    protected List<? extends ParentListItem> mParentItemList;
     protected List<Object> mHelperItemList;
-    private ExpandCollapseListener mExpandCollapseListener;
+    private ExpandableRecyclerAdapter.ExpandCollapseListener mExpandCollapseListener;
     private List<RecyclerView> mAttachedRecyclerViewPool;
 
     /**
@@ -46,11 +45,11 @@ public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, C
      * @param context
      * @param parentItemList List of all parent objects that make up the recyclerview
      */
-    public ExpandableRecyclerAdapter2(Context context, @NonNull List<? extends ParentObject> parentItemList) {
+    public ExpandableRecyclerAdapter2(Context context, @NonNull List<? extends ParentListItem> parentItemList) {
         super();
         mContext = context;
         mParentItemList = parentItemList;
-        mHelperItemList = ExpandableRecyclerAdapterHelper.generateHelperItemList(parentItemList);
+        mHelperItemList = ExpandableRecyclerAdapterHelper.generateParentChildItemList(parentItemList);
         mAttachedRecyclerViewPool = new ArrayList<>();
     }
 
@@ -69,7 +68,7 @@ public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, C
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         if (viewType == TYPE_PARENT) {
             PVH pvh = onCreateParentViewHolder(viewGroup);
-            pvh.setParentItemExpandCollapseListener(this);
+            pvh.setParentListItemExpandCollapseListener(this);
             return pvh;
         } else if (viewType == TYPE_CHILD) {
             return onCreateChildViewHolder(viewGroup);
@@ -103,7 +102,7 @@ public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, C
 
             ParentWrapper parentWrapper = (ParentWrapper) helperItem;
             parentViewHolder.setExpanded(parentWrapper.isExpanded());
-            onBindParentViewHolder(parentViewHolder, position, parentWrapper.getParentObject());
+            onBindParentViewHolder(parentViewHolder, position, parentWrapper.getParentListItem());
         } else if (helperItem == null) {
             throw new IllegalStateException("Incorrect ViewHolder found");
         } else {
@@ -175,7 +174,7 @@ public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, C
     }
 
     @Override
-    public void onParentItemExpanded(int position) {
+    public void onParentListItemExpanded(int position) {
         Object helperItem = getHelperItem(position);
         if (helperItem instanceof ParentWrapper) {
             expandHelperItem((ParentWrapper) helperItem, position, false);
@@ -183,7 +182,7 @@ public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, C
     }
 
     @Override
-    public void onParentItemCollapsed(int position) {
+    public void onParentListItemCollapsed(int position) {
         Object helperItem = getHelperItem(position);
         if (helperItem instanceof ParentWrapper) {
             collapseHelperItem((ParentWrapper) helperItem, position, false);
@@ -202,7 +201,7 @@ public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, C
         mAttachedRecyclerViewPool.remove(recyclerView);
     }
 
-    public void addExpandCollapseListener(ExpandCollapseListener expandCollapseListener) {
+    public void addExpandCollapseListener(ExpandableRecyclerAdapter.ExpandCollapseListener expandCollapseListener) {
         mExpandCollapseListener = expandCollapseListener;
     }
 
@@ -226,12 +225,12 @@ public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, C
     }
 
     /**
-     * Expands the parent associated with a specified {@link ParentObject} in
+     * Expands the parent associated with a specified {@link ParentListItem} in
      * the list of parents.
      *
      * @param parentObject The {@code ParentObject} of the parent to expand
      */
-    public void expandParent(ParentObject parentObject) {
+    public void expandParent(ParentListItem parentObject) {
         ParentWrapper parentWrapper = getParentWrapper(parentObject);
         int parentWrapperIndex = mHelperItemList.indexOf(parentWrapper);
         if (parentWrapperIndex == -1) {
@@ -245,7 +244,7 @@ public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, C
      * Expands all parents in the list.
      */
     public void expandAllParents() {
-        for (ParentObject parentObject : mParentItemList) {
+        for (ParentListItem parentObject : mParentItemList) {
             expandParent(parentObject);
         }
     }
@@ -270,12 +269,12 @@ public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, C
     }
 
     /**
-     * Collapses the parent associated with a specified {@link ParentObject} in
+     * Collapses the parent associated with a specified {@link ParentListItem} in
      * the list of parents.
      *
      * @param parentObject The {@code ParentObject} of the parent to collapse
      */
-    public void collapseParent(ParentObject parentObject) {
+    public void collapseParent(ParentListItem parentObject) {
         ParentWrapper parentWrapper = getParentWrapper(parentObject);
         int parentWrapperIndex = mHelperItemList.indexOf(parentWrapper);
         if (parentWrapperIndex == -1) {
@@ -289,7 +288,7 @@ public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, C
      * Collapses all parents in the list.
      */
     public void collapseAllParents() {
-        for (ParentObject parentObject : mParentItemList) {
+        for (ParentListItem parentObject : mParentItemList) {
             collapseParent(parentObject);
         }
     }
@@ -339,7 +338,7 @@ public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, C
     }
 
     /**
-     * Expands a specified parent item. Calls through to the {@link ExpandCollapseListener}
+     * Expands a specified parent item. Calls through to the {@link ExpandableRecyclerAdapter.ExpandCollapseListener}
      * and adds children of the specified parent to the total list of items.
      *
      * @param parentWrapper The {@link ParentWrapper} of the parent to expand
@@ -354,10 +353,10 @@ public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, C
             if (!expansionTriggeredProgrammatically
                     && mExpandCollapseListener != null) {
                 int expandedCountBeforePosition = getExpandedItemCount(parentIndex);
-                mExpandCollapseListener.onRecyclerViewItemExpanded(parentIndex - expandedCountBeforePosition);
+                mExpandCollapseListener.onListItemCollapsed(parentIndex - expandedCountBeforePosition);
             }
 
-            List<Object> childObjectList = parentWrapper.getParentObject().getChildObjectList();
+            List<?> childObjectList = parentWrapper.getParentListItem().getChildItemList();
             if (childObjectList != null) {
                 int numChildObjects = childObjectList.size();
                 for (int i = 0; i < numChildObjects; i++) {
@@ -369,7 +368,7 @@ public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, C
     }
 
     /**
-     * Collapses a specified parent item. Calls through to the {@link ExpandCollapseListener}
+     * Collapses a specified parent item. Calls through to the {@link ExpandableRecyclerAdapter.ExpandCollapseListener}
      * and adds children of the specified parent to the total list of items.
      *
      * @param parentWrapper The {@link ParentWrapper} of the parent to collapse
@@ -384,10 +383,10 @@ public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, C
             if (!collapseTriggeredProgrammatically
                     && mExpandCollapseListener != null) {
                 int expandedCountBeforePosition = getExpandedItemCount(parentIndex);
-                mExpandCollapseListener.onRecyclerViewItemCollapsed(parentIndex - expandedCountBeforePosition);
+                mExpandCollapseListener.onListItemCollapsed(parentIndex - expandedCountBeforePosition);
             }
 
-            List<Object> childObjectList = parentWrapper.getParentObject().getChildObjectList();
+            List<?> childObjectList = parentWrapper.getParentListItem().getChildItemList();
             if (childObjectList != null) {
                 for (int i = childObjectList.size() - 1; i >= 0; i--) {
                     mHelperItemList.remove(parentIndex + i + 1);
@@ -493,8 +492,8 @@ public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, C
                 ParentWrapper parentWrapper = (ParentWrapper) helperItem;
                 if (expandedStateMap.containsKey(fullCount - childCount)) {
                     parentWrapper.setExpanded(expandedStateMap.get(fullCount - childCount));
-                    if (parentWrapper.isExpanded() && !parentWrapper.getParentObject().isInitiallyExpanded()) {
-                        List<Object> childObjectList = parentWrapper.getParentObject().getChildObjectList();
+                    if (parentWrapper.isExpanded() && !parentWrapper.getParentListItem().isInitiallyExpanded()) {
+                        List<?> childObjectList = parentWrapper.getParentListItem().getChildItemList();
                         if (childObjectList != null) {
                             for (int j = 0; j < childObjectList.size(); j++) {
                                 fullCount++;
@@ -502,8 +501,8 @@ public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, C
                                 mHelperItemList.add(fullCount, childObjectList.get(j));
                             }
                         }
-                    } else if (!parentWrapper.isExpanded() && parentWrapper.getParentObject().isInitiallyExpanded()) {
-                        List<Object> childObjectList = parentWrapper.getParentObject().getChildObjectList();
+                    } else if (!parentWrapper.isExpanded() && parentWrapper.getParentListItem().isInitiallyExpanded()) {
+                        List<?> childObjectList = parentWrapper.getParentListItem().getChildItemList();
                         for (int j = 0; j < childObjectList.size(); j++) {
                             mHelperItemList.remove(fullCount + 1);
                         }
@@ -560,19 +559,19 @@ public abstract class ExpandableRecyclerAdapter2<PVH extends ParentViewHolder, C
     }
 
     /**
-     * Gets the {@link ParentWrapper} for a specified {@link ParentObject} from
+     * Gets the {@link ParentWrapper} for a specified {@link ParentListItem} from
      * the list of parents.
      *
      * @param parentObject A {@code ParentObject} in the list of parents
      * @return If the parent exists on the list, returns its {@code ParentWrapper}.
      *         Otherwise, returns {@value null}.
      */
-    private ParentWrapper getParentWrapper(ParentObject parentObject) {
+    private ParentWrapper getParentWrapper(ParentListItem parentObject) {
         int numHelperItems = mHelperItemList.size();
         for (int i = 0; i < numHelperItems; i++) {
             Object helperItem = mHelperItemList.get(i);
             if (helperItem instanceof ParentWrapper) {
-                if (((ParentWrapper) helperItem).getParentObject().equals(parentObject)) {
+                if (((ParentWrapper) helperItem).getParentListItem().equals(parentObject)) {
                     return (ParentWrapper) helperItem;
                 }
             }

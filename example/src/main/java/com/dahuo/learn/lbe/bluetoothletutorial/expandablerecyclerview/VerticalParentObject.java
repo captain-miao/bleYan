@@ -1,7 +1,7 @@
 package com.dahuo.learn.lbe.bluetoothletutorial.expandablerecyclerview;
 
 
-import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
+import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * @version 1.0
  * @since 19/9/2015
  */
-public class VerticalParentObject implements ParentObject {
+public class VerticalParentObject implements ParentListItem {
 
     // A List<Object> or subclass of List must be added for the object to work correctly
     private List<Object> mChildObjectList;
@@ -35,7 +35,7 @@ public class VerticalParentObject implements ParentObject {
      * @return list of all children associated with this specific parent object
      */
     @Override
-    public List<Object> getChildObjectList() {
+    public List<Object> getChildItemList() {
         return mChildObjectList;
     }
 

@@ -1,11 +1,9 @@
 package com.dahuo.learn.lbe.bluetoothletutorial.expandablerecyclerview;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
 import com.bignerdranch.expandablerecyclerview.ViewHolder.ChildViewHolder;
-import com.dahuo.learn.lbe.bluetoothletutorial.BleDeviceActivity;
 import com.dahuo.learn.lbe.bluetoothletutorial.R;
 
 

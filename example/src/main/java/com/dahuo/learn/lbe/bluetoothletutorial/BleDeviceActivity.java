@@ -20,29 +20,26 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.internal.MDButton;
-import com.bignerdranch.expandablerecyclerview.Listener.ExpandCollapseListener;
-import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
+import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
+import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 import com.dahuo.learn.lbe.blelibrary.BleCallback;
 import com.dahuo.learn.lbe.blelibrary.BluetoothHelper;
 import com.dahuo.learn.lbe.blelibrary.ConnectCallback;
 import com.dahuo.learn.lbe.blelibrary.constant.BleConnectState;
 import com.dahuo.learn.lbe.blelibrary.constant.ConnectError;
-import com.dahuo.learn.lbe.blelibrary.utils.BleLog;
 import com.dahuo.learn.lbe.blelibrary.utils.BleUtils;
 import com.dahuo.learn.lbe.blelibrary.utils.HexUtil;
 import com.dahuo.learn.lbe.bluetoothletutorial.app.AppLog;
 import com.dahuo.learn.lbe.bluetoothletutorial.ble.AppBluetoothHelper;
 import com.dahuo.learn.lbe.bluetoothletutorial.constant.AppConstants;
-import com.dahuo.learn.lbe.bluetoothletutorial.model.BleDevice;
 import com.dahuo.learn.lbe.bluetoothletutorial.expandablerecyclerview.VerticalChildObject;
 import com.dahuo.learn.lbe.bluetoothletutorial.expandablerecyclerview.VerticalExpandableAdapter;
 import com.dahuo.learn.lbe.bluetoothletutorial.expandablerecyclerview.VerticalParentObject;
+import com.dahuo.learn.lbe.bluetoothletutorial.model.BleDevice;
 import com.dahuo.learn.lbe.supportsdk.BaseActivity;
 import com.dahuo.learn.lbe.supportsdk.app.AppToast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +49,7 @@ import java.util.UUID;
  * Created by on 15/8/3.
  */
 public class BleDeviceActivity extends BaseActivity implements View.OnClickListener,
-                                            BluetoothHelper.OnBindListener, ExpandCollapseListener {
+                                            BluetoothHelper.OnBindListener, ExpandableRecyclerAdapter.ExpandCollapseListener {
     private static final String TAG = BleDeviceActivity.class.getSimpleName();
 
     private TextView mTVConnectionState;
@@ -354,19 +351,19 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
     }
 
     @Override
-    public void onRecyclerViewItemExpanded(int position) {
+    public void onListItemExpanded(int position) {
 
     }
 
     @Override
-    public void onRecyclerViewItemCollapsed(int position) {
+    public void onListItemCollapsed(int position) {
 
     }
 
-    private ArrayList<ParentObject> getAdapterData(List<BluetoothGattService> gattServices) {
+    private ArrayList<ParentListItem> getAdapterData(List<BluetoothGattService> gattServices) {
         String unknownServiceString = getResources().getString(R.string.unknown_service);
         String unknownCharaString = getResources().getString(R.string.unknown_characteristic);
-        ArrayList<ParentObject> parentObjectList = new ArrayList<>();
+        ArrayList<ParentListItem> parentObjectList = new ArrayList<>();
         for (BluetoothGattService gattService : gattServices) {
             String serviceUUID = gattService.getUuid().toString();
             ArrayList<Object> childObjectList = new ArrayList<>();
