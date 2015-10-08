@@ -25,13 +25,14 @@ public class LollipopBleScanner extends BaseBleScanner {
 
 
     private BluetoothLeScanner mBluetoothScanner = null;
+    private BluetoothAdapter mBluetoothAdapter = null;
     private SimpleScanCallback mScanCallback = null;
 
     public LollipopBleScanner(SimpleScanCallback callback) {
         mScanCallback = callback;
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter != null) {
-            mBluetoothScanner = bluetoothAdapter.getBluetoothLeScanner();
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter != null) {
+            mBluetoothScanner = mBluetoothAdapter.getBluetoothLeScanner();
         }
     }
 
@@ -39,9 +40,14 @@ public class LollipopBleScanner extends BaseBleScanner {
     @Override
     public void onStartBleScan(long timeoutMillis) {
         long delay = timeoutMillis == 0 ? defaultTimeout : timeoutMillis;
-        if (mBluetoothScanner != null) {
-            mBluetoothScanner.startScan(scanCallback);
-            isScanning = true;
+        if (mBluetoothScanner != null && mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()) {
+            try {
+                mBluetoothScanner.startScan(scanCallback);
+                isScanning = true;
+            } catch (Exception e){
+                isScanning = false;
+                BleLog.e(TAG, e.toString());
+            }
             timeoutHandler.postDelayed(timeoutRunnable, delay);
         } else {
             mScanCallback.onBleScanFailed(BleScanState.BLUETOOTH_OFF);//蓝牙 未开启
@@ -52,9 +58,15 @@ public class LollipopBleScanner extends BaseBleScanner {
     @SuppressWarnings(value = {"deprecation"})
     @Override
     public void onStartBleScan() {
-        if (mBluetoothScanner != null) {
-            mBluetoothScanner.startScan(scanCallback);
-            isScanning = true;
+        if (mBluetoothScanner != null && mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()) {
+            try {
+                mBluetoothScanner.startScan(scanCallback);
+                isScanning = true;
+            } catch (Exception e){
+                isScanning = false;
+                mScanCallback.onBleScanFailed(BleScanState.BLUETOOTH_OFF);//蓝牙 未开启
+                BleLog.e(TAG, e.toString());
+            }
         } else {
             mScanCallback.onBleScanFailed(BleScanState.BLUETOOTH_OFF);//蓝牙 未开启
         }
@@ -65,8 +77,12 @@ public class LollipopBleScanner extends BaseBleScanner {
     @Override
     public void onStopBleScan() {
         isScanning = false;
-        if (mBluetoothScanner != null) {
-            mBluetoothScanner.stopScan(scanCallback);
+        if (mBluetoothScanner != null && mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()) {
+            try {
+                mBluetoothScanner.stopScan(scanCallback);
+            } catch (Exception e) {
+                BleLog.e(TAG, e.toString());
+            }
         }
     }
 
