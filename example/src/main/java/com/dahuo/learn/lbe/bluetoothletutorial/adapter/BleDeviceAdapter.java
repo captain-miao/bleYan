@@ -7,12 +7,15 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.dahuo.learn.lbe.bluetoothletutorial.BleDeviceActivity;
 import com.dahuo.learn.lbe.bluetoothletutorial.R;
 import com.dahuo.learn.lbe.bluetoothletutorial.constant.AppConstants;
 import com.dahuo.learn.lbe.bluetoothletutorial.model.BleDevice;
+import com.dahuo.learn.lbe.bluetoothletutorial.model.FavouriteInfo;
 import com.dahuo.learn.lbe.supportsdk.refresh.BaseLoadMoreRecyclerAdapter;
 
 import java.util.List;
@@ -21,7 +24,7 @@ import java.util.List;
  * @author YanLu
  * @since 15/9/15
  */
-public class BleDeviceAdapter extends BaseLoadMoreRecyclerAdapter<BleDevice, BleDeviceAdapter.ItemViewHolder> {
+public class BleDeviceAdapter extends BaseLoadMoreRecyclerAdapter<BleDevice, BleDeviceAdapter.ItemViewHolder> implements View.OnClickListener {
 
     private Context mContext;
     private RecyclerView mRecyclerView;
@@ -52,7 +55,12 @@ public class BleDeviceAdapter extends BaseLoadMoreRecyclerAdapter<BleDevice, Ble
     public void onBindItemViewHolder(BleDeviceAdapter.ItemViewHolder vh, int position) {
         BleDevice bleDevice = getItem(position);
         boolean isEnable = (System.currentTimeMillis() - bleDevice.updateTime) < 60 * 1000;
-        vh.mTvName.setText(TextUtils.isEmpty(bleDevice.name) ? mContext.getString(R.string.ble_unknown) : bleDevice.name);
+        vh.mTvName.setText(
+                TextUtils.isEmpty(bleDevice.name) ?
+                        mContext.getString(R.string.ble_unknown)
+                        : bleDevice.name + "(" + bleDevice.aliasName  + ")");
+        vh.mIvFavourite.setImageResource(
+                bleDevice.isFavourite ? R.drawable.icon_favourite_on : R.drawable.icon_favourite_off);
         vh.mTvMac.setText(mContext.getString(R.string.ble_mac_label, bleDevice.address));
         setBleValue(vh.mTvdBm, bleDevice.rssi, isEnable);
         vh.mTvBroadcast.setText(mContext.getString(R.string.ble_broadcast_label, bleDevice.broadcast));
@@ -60,6 +68,8 @@ public class BleDeviceAdapter extends BaseLoadMoreRecyclerAdapter<BleDevice, Ble
         vh.mTvMac.setEnabled(isEnable);
         vh.mTvdBm.setEnabled(isEnable);
         vh.mTvBroadcast.setEnabled(isEnable);
+        vh.mIvFavourite.setTag(position);
+        vh.mIvFavourite.setOnClickListener(this);
     }
 
 
@@ -77,9 +87,39 @@ public class BleDeviceAdapter extends BaseLoadMoreRecyclerAdapter<BleDevice, Ble
         tv.setText(mContext.getString(R.string.ble_dbm_label, value));
     }
 
+    @Override
+    public void onClick(View v) {
+        final int position = (int) v.getTag();
+        final BleDevice bleDevice = getItem(position);
+        bleDevice.isFavourite = !bleDevice.isFavourite;
+        if(bleDevice.isFavourite){
+            new MaterialDialog.Builder(mContext)
+                    .title("Setting name")
+                    .input("input name",
+                            TextUtils.isEmpty(bleDevice.aliasName) ? "" : bleDevice.aliasName,
+                            new MaterialDialog.InputCallback() {
+                                @Override
+                                public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
+                                    new FavouriteInfo(bleDevice.address, charSequence.toString(), bleDevice.isFavourite).save();
+                                    bleDevice.aliasName = charSequence.toString();
+                                    notifyItemChanged(position);
+                                }
+                            })
+                    .positiveText(R.string.label_ok)
+                    .cancelable(true)
+                    .negativeText(R.string.label_cancel)
+                    .show();
+        } else {
+            FavouriteInfo favourite = FavouriteInfo.getFavourite(bleDevice.address);
+            new FavouriteInfo(bleDevice.address, favourite.name, false).save();
+            notifyItemChanged(position);
+        }
+    }
+
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         public TextView mTvName;
+        public ImageView mIvFavourite;
         public TextView mTvMac;
         public TextView mTvdBm;
         public TextView mTvBroadcast;
@@ -87,6 +127,7 @@ public class BleDeviceAdapter extends BaseLoadMoreRecyclerAdapter<BleDevice, Ble
         public ItemViewHolder(View view) {
             super(view);
             mTvName = (TextView) view.findViewById(R.id.tv_name);
+            mIvFavourite = (ImageView) view.findViewById(R.id.iv_favourite);
             mTvMac = (TextView) view.findViewById(R.id.tv_mac);
             mTvdBm = (TextView) view.findViewById(R.id.tv_dbm);
             mTvBroadcast = (TextView) view.findViewById(R.id.tv_broadcast);

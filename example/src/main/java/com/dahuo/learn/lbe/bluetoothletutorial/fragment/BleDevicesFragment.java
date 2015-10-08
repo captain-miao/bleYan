@@ -1,8 +1,6 @@
 package com.dahuo.learn.lbe.bluetoothletutorial.fragment;
 
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dahuo.learn.lbe.blelibrary.BleScanner;
@@ -27,7 +24,7 @@ import com.dahuo.learn.lbe.bluetoothletutorial.R;
 import com.dahuo.learn.lbe.bluetoothletutorial.adapter.BleDeviceAdapter;
 import com.dahuo.learn.lbe.bluetoothletutorial.constant.AppConstants;
 import com.dahuo.learn.lbe.bluetoothletutorial.model.BleDevice;
-import com.dahuo.learn.lbe.supportsdk.refresh.BaseLoadMoreRecyclerAdapter;
+import com.dahuo.learn.lbe.bluetoothletutorial.model.FavouriteInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -171,9 +168,15 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
             @Override
             public void run() {
                 BleLog.i(TAG, device.toString() + " rssi: " + rssi);
-                if (bleDeviceHashMap.get(device.getAddress()) == null) {
-                    bleDeviceHashMap.put(device.getAddress(), device);
-                    mAdapter.append(new BleDevice(device.getName(), device.getAddress(), rssi, HexUtil.encodeHexStr(scanRecord)));
+                String address = device.getAddress();
+                if (bleDeviceHashMap.get(address) == null) {
+                    bleDeviceHashMap.put(address, device);
+                    FavouriteInfo favourite = FavouriteInfo.getFavourite(address);
+                    BleDevice bleDevice = new BleDevice(address, device.getAddress(),
+                            rssi, HexUtil.encodeHexStr(scanRecord), favourite.isFavourite);
+                    bleDevice.aliasName = (TextUtils.isEmpty(favourite.name) ? "" : (favourite.name));
+
+                    mAdapter.append(bleDevice);
                     try {
                         mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
                     } catch (Exception e){
