@@ -47,7 +47,7 @@ public class OpenSourceFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_about, null);
+        View rootView = inflater.inflate(R.layout.frg_about, null);
         mTvTitle = (TextView) rootView.findViewById(R.id.tvVersion);
         return rootView;
     }

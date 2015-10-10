@@ -2,7 +2,6 @@ package com.dahuo.learn.lbe.bluetoothletutorial.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +47,7 @@ public class AboutFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_about, null);
+        View rootView = inflater.inflate(R.layout.frg_about, null);
         mTvTitle = (TextView) rootView.findViewById(R.id.tvVersion);
         return rootView;
     }

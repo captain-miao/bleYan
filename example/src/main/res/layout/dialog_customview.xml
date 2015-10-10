@@ -10,11 +10,26 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/label_write_data"
-            android:textSize="14sp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/label_write_data"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btn_load_command"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="command"
+                android:textSize="14sp" />
+        </LinearLayout>
 
 
         <LinearLayout
@@ -36,8 +51,10 @@
                 android:digits="0123456789ABCDEF"
                 android:hint="@string/label_write_data_hint"
                 android:inputType="textCapCharacters"
+                android:singleLine="true"
                 android:textSize="14sp" />
         </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout

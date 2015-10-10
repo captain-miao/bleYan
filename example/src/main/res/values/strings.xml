@@ -2,7 +2,9 @@
     <string name="app_name">bleYan</string>
 
     <string name="ble_unknown">unknown</string>
+    <string name="ble_name_label" formatted="false">%s(%s)</string>
     <string name="ble_mac_label" formatted="false">Mac: \t%s</string>
+    <string name="ble_command_label" formatted="false">Command: \t0x%s</string>
     <string name="ble_dbm_label" formatted="false">dBm: \t%d</string>
     <string name="ble_broadcast_label" formatted="false">Scan Record: \r\n%s</string>
     <string name="app_loading">processing…</string>
@@ -11,6 +13,9 @@
     <string name="app_ble_scan_start">Scan</string>
     <string name="app_ble_scan_stop">Stop</string>
 
+    <string name="app_ble_command_add">Add</string>
+
+    <string name="app_user_config">Config</string>
     <string name="app_open_source">Git Open Source</string>
     <string name="app_about">About</string>
     <string name="app_name_about">@string/app_name</string>
@@ -49,9 +54,12 @@
     <string name="unknown_characteristic">Unknown characteristic</string>
     <string name="unknown_service">Unknown service</string>
 
+    <string name="label_command_data">Command: </string>
+    <string name="label_command_name">Name: </string>
     <string name="label_write_data">Write: </string>
     <string name="label_read_data">Read Characteristic</string>
     <string name="label_notify_data">Notify: </string>
+    <string name="label_command_name_hint">input name</string>
     <string name="label_write_data_hint">input hex</string>
     <string name="label_notify_characteristic_data">Notify Data:</string>
     <string name="label_data">Data:</string>

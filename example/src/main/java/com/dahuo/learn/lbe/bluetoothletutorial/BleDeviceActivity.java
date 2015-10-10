@@ -35,6 +35,7 @@ import com.dahuo.learn.lbe.bluetoothletutorial.constant.AppConstants;
 import com.dahuo.learn.lbe.bluetoothletutorial.expandablerecyclerview.VerticalChildObject;
 import com.dahuo.learn.lbe.bluetoothletutorial.expandablerecyclerview.VerticalExpandableAdapter;
 import com.dahuo.learn.lbe.bluetoothletutorial.expandablerecyclerview.VerticalParentObject;
+import com.dahuo.learn.lbe.bluetoothletutorial.model.BleCommandInfo;
 import com.dahuo.learn.lbe.bluetoothletutorial.model.BleDevice;
 import com.dahuo.learn.lbe.supportsdk.BaseActivity;
 import com.dahuo.learn.lbe.supportsdk.app.AppToast;
@@ -219,6 +220,26 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
                                 } else {
                                     AppToast.showCenter(BleDeviceActivity.this, "write data is empty");
                                 }
+                            }
+                        });
+
+                        final Button loadCommand = (Button) dialogView.findViewById(R.id.btn_load_command);
+                        loadCommand.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                new MaterialDialog.Builder(mContext)
+                                        .title("Command")
+                                        .items(BleCommandInfo.queryAllCommands())
+                                        .itemsCallback(new MaterialDialog.ListCallback() {
+                                            @Override
+                                            public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                                if (!TextUtils.isEmpty(text)) {
+                                                    hexEdit.setText(text);
+                                                    hexEdit.setSelection(text.length());
+                                                }
+                                            }
+                                        })
+                                        .show();
                             }
                         });
                         if((charaProp & BluetoothGattCharacteristic.PROPERTY_WRITE)

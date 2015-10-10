@@ -120,7 +120,7 @@ public abstract class BaseLoadMoreRecyclerAdapter<T, VH extends RecyclerView.Vie
 
 
 	public void remove(int position) {
-		if (position < mList.size() - 1 && position >= 0) {
+		if (position >= 0 && position <= mList.size() - 1) {
 			mList.remove(position);
 		}
 	}

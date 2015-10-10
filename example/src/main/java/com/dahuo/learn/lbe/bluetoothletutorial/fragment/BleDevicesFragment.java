@@ -71,7 +71,7 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.frag_swipe_refresh_list, null);
+        View rootView = inflater.inflate(R.layout.frg_swipe_refresh_list, null);
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.activity_main_swipe_refresh_layout);
         mRecyclerView =  (RecyclerView) rootView.findViewById(R.id.recycler_view);
         return rootView;

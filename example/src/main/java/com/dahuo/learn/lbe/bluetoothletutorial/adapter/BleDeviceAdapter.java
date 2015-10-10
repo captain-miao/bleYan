@@ -55,10 +55,14 @@ public class BleDeviceAdapter extends BaseLoadMoreRecyclerAdapter<BleDevice, Ble
     public void onBindItemViewHolder(BleDeviceAdapter.ItemViewHolder vh, int position) {
         BleDevice bleDevice = getItem(position);
         boolean isEnable = (System.currentTimeMillis() - bleDevice.updateTime) < 60 * 1000;
-        vh.mTvName.setText(
-                TextUtils.isEmpty(bleDevice.name) ?
-                        mContext.getString(R.string.ble_unknown)
-                        : bleDevice.name + "(" + bleDevice.aliasName  + ")");
+        String name = TextUtils.isEmpty(bleDevice.name) ?
+                mContext.getString(R.string.ble_unknown) : bleDevice.name;
+        //String aliasName = TextUtils.isEmpty(bleDevice.aliasName) ? "" : bleDevice.aliasName;
+        if(TextUtils.isEmpty(bleDevice.aliasName)) {
+            vh.mTvName.setText(name);
+        } else {
+            vh.mTvName.setText(mContext.getString(R.string.ble_name_label, name, bleDevice.aliasName));
+        }
         vh.mIvFavourite.setImageResource(
                 bleDevice.isFavourite ? R.drawable.icon_favourite_on : R.drawable.icon_favourite_off);
         vh.mTvMac.setText(mContext.getString(R.string.ble_mac_label, bleDevice.address));
@@ -131,6 +135,7 @@ public class BleDeviceAdapter extends BaseLoadMoreRecyclerAdapter<BleDevice, Ble
             mTvMac = (TextView) view.findViewById(R.id.tv_mac);
             mTvdBm = (TextView) view.findViewById(R.id.tv_dbm);
             mTvBroadcast = (TextView) view.findViewById(R.id.tv_broadcast);
+            //getAdapterPosition();
         }
 
         @Override

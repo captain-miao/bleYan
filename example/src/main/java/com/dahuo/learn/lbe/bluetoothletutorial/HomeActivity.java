@@ -10,6 +10,7 @@ import android.view.WindowManager;
 
 import com.dahuo.learn.lbe.bluetoothletutorial.fragment.AboutFragment;
 import com.dahuo.learn.lbe.bluetoothletutorial.fragment.BleDevicesFragment;
+import com.dahuo.learn.lbe.bluetoothletutorial.fragment.ConfigFragment;
 import com.dahuo.learn.lbe.supportsdk.app.AppUpgrade;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
@@ -49,6 +50,14 @@ public class HomeActivity extends MaterialNavigationDrawer implements MaterialAc
                     .sizeDp(24),
                 BleDevicesFragment.newInstance(getString(R.string.app_home)));
 
+        MaterialSection configSection =
+                newSection(getString(R.string.app_user_config),
+                new IconicsDrawable(this)
+                    .icon(FontAwesome.Icon.faw_gg_circle)
+                    .color(Color.WHITE)
+                    .sizeDp(24),
+                ConfigFragment.newInstance(getString(R.string.app_user_config)));
+
         MaterialSection openSourceSection =
                 newSection(getString(R.string.app_open_source),
                 new IconicsDrawable(this)
@@ -68,6 +77,7 @@ public class HomeActivity extends MaterialNavigationDrawer implements MaterialAc
 
 
         addSection(homeSection);
+        addSection(configSection);
         addSection(openSourceSection);
         addSection(aboutSection);
 
