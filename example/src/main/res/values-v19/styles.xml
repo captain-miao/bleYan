@@ -16,6 +16,7 @@
         <item name="singleAccount">true</item>
         <item name="learningPattern">false</item>
         <item name="rippleBackport">true</item>
+        <item name="toolbarElevation">false</item>
     </style>
 
     <style name="ActivityThemeNoBar" parent="MaterialNavigationDrawerTheme">

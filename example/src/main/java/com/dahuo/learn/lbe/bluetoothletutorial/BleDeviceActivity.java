@@ -42,8 +42,10 @@ import com.dahuo.learn.lbe.supportsdk.app.AppToast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.UUID;
 
 /**
@@ -124,6 +126,9 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
         }
    	}
 
+    //显示 10行数据
+    Queue<String> mDataQueue = new LinkedList<String>();
+
     private BleCallback mBleCallback = new BleCallback() {
         @Override
         public void onFailed(String msg) {
@@ -149,11 +154,23 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
         public void onCharacteristicNotification(UUID uuid, byte[] data) {
             String values = HexUtil.encodeHexStr(data);
             AppLog.i(TAG, "onCharacteristicNotification: " + values);
+            mDataQueue.add(values);
+            int size = mDataQueue.size();
+            while (size > 10){
+                mDataQueue.poll();
+                size--;
+            }
+
+            mDataField.setText("");
+            for(String v : mDataQueue){
+                mDataField.append(v);
+                mDataField.append("\n");
+            }
+
             if(sb != null && sb.length() < 100 * 1024) {
                 sb.append(values).append("\n");
-                mDataField.setText(HexUtil.encodeHexStr(data));
             } else {
-                mDataField.setText("data length is too long...");
+                mDataField.append("data length is too long...");
             }
         }
 
@@ -173,6 +190,8 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
             //服务发现成功
             if (gatt != null && status == BluetoothGatt.GATT_SUCCESS) {
                 displayGattServices(gatt.getServices());
+            } else {
+                AppToast.show(BleDeviceActivity.this, "discover services fail");
             }
         }
     };
@@ -227,15 +246,19 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
                         loadCommand.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                final BleCommandInfo[] commandInfos = BleCommandInfo.queryAllCommands();
                                 new MaterialDialog.Builder(mContext)
                                         .title("Command")
-                                        .items(BleCommandInfo.queryAllCommands())
+                                        .items(commandInfos)
                                         .itemsCallback(new MaterialDialog.ListCallback() {
                                             @Override
                                             public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                                                 if (!TextUtils.isEmpty(text)) {
-                                                    hexEdit.setText(text);
-                                                    hexEdit.setSelection(text.length());
+                                                    if (text.length() >= 5) {
+                                                        BleCommandInfo command = commandInfos[which];
+                                                        hexEdit.setText(command.command);
+                                                        hexEdit.setSelection(command.command.length());
+                                                    }
                                                 }
                                             }
                                         })
@@ -347,6 +370,7 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onConnectFailed(ConnectError error) {
                 dismissProgressDialog();
+                AppToast.show(BleDeviceActivity.this, "connected fail");
             }
         });
     }

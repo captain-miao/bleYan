@@ -93,6 +93,8 @@
         android:layout_height="wrap_content"
         android:text="@string/no_data"
         android:textIsSelectable="true"
+        android:lineSpacingExtra="2dp"
+        android:maxLines="10"
         android:textSize="12sp" />
 
     <android.support.v7.widget.RecyclerView
