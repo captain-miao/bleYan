@@ -26,41 +26,17 @@
     <string name="about_me">E-mail：captain_miao@163.com \r\n\r\n\r\nBlog：http://yanlu.me \r\n\r\n\r\nWeChat：c16916</string>
 
 
-
-    <!-- Sample menu -->
-    <string name="action_settings">Settings</string>
-
-    <!-- Drawer Items -->
-    <string name="drawer_item_compact_header">Home</string>
-    <string name="drawer_item_action_bar">ActionBar Drawer</string>
-    <string name="drawer_item_multi_drawer">Multi Drawer</string>
-    <string name="drawer_item_non_translucent_status_drawer">NonTranslucentStatus Drawer</string>
-    <string name="drawer_item_complex_header_drawer">ComplexHeader Drawer</string>
-    <string name="drawer_item_simple_fragment_drawer">SimpleFragment Drawer</string>
-    <string name="drawer_item_embedded_drawer">Embedded Drawer</string>
-    <string name="drawer_item_embedded_drawer_desc">Some description</string>
-    <string name="drawer_item_mini_drawer">MiniDrawer</string>
-    <string name="drawer_item_fullscreen_drawer">FullScreen Drawer</string>
-    <string name="drawer_item_custom_container_drawer">CustomContainer Drawer</string>
-    <string name="drawer_item_menu_drawer">Menu Drawer</string>
-    <string name="drawer_item_home">Home</string>
-    <string name="drawer_item_free_play">Free Play</string>
-    <string name="drawer_item_custom">Custom</string>
-    <string name="drawer_item_section_header">Section Header</string>
-    <string name="drawer_item_settings">Settings</string>
-    <string name="drawer_item_help">Help</string>
-
     <string name="unknown_device">Unknown device</string>
     <string name="unknown_characteristic">Unknown characteristic</string>
     <string name="unknown_service">Unknown service</string>
 
-    <string name="label_command_data">Command: </string>
+    <string name="label_command_data">Command(limit length 20): </string>
     <string name="label_command_name">Name: </string>
     <string name="label_write_data">Write: </string>
     <string name="label_read_data">Read Characteristic</string>
     <string name="label_notify_data">Notify: </string>
     <string name="label_command_name_hint">input name</string>
-    <string name="label_write_data_hint">input hex</string>
+    <string name="label_write_data_hint">input hex(max length 20 bytes)</string>
     <string name="label_notify_characteristic_data">Notify Data:</string>
     <string name="label_data">Data:</string>
     <string name="label_device_address">address:</string>
@@ -70,9 +46,37 @@
     <string name="disconnected">Disconnected</string>
     <string name="title_devices">BLE Device Scan</string>
     <string name="label_cancel">Cancel</string>
-    <string name="label_ok">Ok</string>
+    <string name="label_ok">OK</string>
+    <string name="button_share">SHARE</string>
+    <string name="button_clear">CLEAR</string>
 
     <string name="label_lbe_permissions" formatted="false">Permissions:\t%s</string>
     <string name="label_lbe_properties" formatted="false">Properties:\t%s</string>
     <string name="label_lbe_write_type" formatted="false">WriteType:\t%s</string>
+
+    <string name="label_action_add_command" formatted="false">Add Command</string>
+
+
+    <string name="label_config_commands" formatted="false">COMMANDS</string>
+    <string name="label_config_devices" formatted="false">DEVICES</string>
+    <string name="app_tips_bluetooth_data_max_len">Bluetooth4.0 data max len 20</string>
+    <string name="app_tips_command_empty">command is empty</string>
+    <string name="app_tips_name_empty">name is empty</string>
+    <string name="app_tips_data_must_be_even">write data length must even</string>
+    <string name="app_tips_write_read_data">Write/Read</string>
+    <string name="app_tips_connect_fail">connect fail</string>
+    <string name="app_tips_discover_services_fail">discover services fail</string>
+    <string name="app_tips_notify_data_too_long">data length is too long…</string>
+
+
+    <string name="app_ble_status_0">BLE Initialed</string>
+    <string name="app_ble_status_1">BLE Scanning</string>
+    <string name="app_ble_status_2">BLE Connecting</string>
+    <string name="app_ble_status_3">BLE Connected</string>
+    <string name="app_ble_status_4">BLE Services Discovering</string>
+    <string name="app_ble_status_5">BLE Services Discovered</string>
+    <string name="app_ble_status_6">BLE Disconnecting</string>
+    <string name="app_ble_status_7">BLE Disconnected</string>
+    <string name="app_ble_status_8">Bluetooth_off</string>
+    <string name="app_ble_status_9">BLE Services Discover Failed</string>
 </resources>

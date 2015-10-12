@@ -18,8 +18,18 @@ public class AppToast {
     public static void show(Context context, String msg) {
         SuperToast.create(context, msg, SuperToast.Duration.LONG, SuperToast.Animations.POPUP).show();
     }
+
     public static void showCenter(Context context, String msg) {
         SuperToast toast = SuperToast.create(context, msg, SuperToast.Duration.LONG, SuperToast.Animations.POPUP);
+
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+    }
+
+    public static void showCenter(Context context, int rid) {
+        SuperToast toast = SuperToast.create(context,
+                context.getString(rid),
+                SuperToast.Duration.LONG, SuperToast.Animations.POPUP);
 
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();

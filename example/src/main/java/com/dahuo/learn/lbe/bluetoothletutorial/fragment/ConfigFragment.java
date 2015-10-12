@@ -74,8 +74,8 @@ public class ConfigFragment extends BaseFragment {
 
     private void setupViewPager(ViewPager viewPager) {
         final Adapter adapter = new Adapter(getChildFragmentManager());
-        adapter.addFragment(new DevicesCommandFragment(), "Commands");
-        adapter.addFragment(new DevicesConfigFragment(), "Devices");
+        adapter.addFragment(new DevicesCommandFragment(), getString(R.string.label_config_commands));
+        adapter.addFragment(new DevicesConfigFragment(), getString(R.string.label_config_devices));
         viewPager.setAdapter(adapter);
     }
 

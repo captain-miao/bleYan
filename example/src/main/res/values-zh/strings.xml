@@ -1,0 +1,85 @@
+<resources>
+    <string name="app_name">bleYan</string>
+
+    <string name="ble_unknown">未知</string>
+    <string name="ble_name_label" formatted="false">%s(%s)</string>
+    <string name="ble_mac_label" formatted="false">Mac: \t%s</string>
+    <string name="ble_command_label" formatted="false">命令: \t0x%s</string>
+    <string name="ble_dbm_label" formatted="false">dBm: \t%d</string>
+    <string name="ble_broadcast_label" formatted="false">Scan Record: \r\n%s</string>
+    <string name="app_loading">处理中…</string>
+
+    <string name="app_home">首页</string>
+    <string name="app_ble_scan_start">扫描</string>
+    <string name="app_ble_scan_stop">停止</string>
+
+    <string name="app_ble_command_add">添加</string>
+
+    <string name="app_user_config">配置</string>
+    <string name="app_open_source">开源库</string>
+    <string name="app_about">关于</string>
+    <string name="app_name_about">@string/app_name</string>
+    <string name="app_version_about" formatted="false">Version: %s</string>
+    <string name="feedback">反馈</string>
+    <string name="about_me_email">captain_miao@163.com</string>
+    <string name="about_me_name" >Yan Lu</string>
+    <string name="about_me">E-mail：captain_miao@163.com \r\n\r\n\r\nBlog：http://yanlu.me \r\n\r\n\r\nWeChat：c16916</string>
+
+
+
+    <string name="unknown_device">Unknown device</string>
+    <string name="unknown_characteristic">Unknown characteristic</string>
+    <string name="unknown_service">Unknown service</string>
+
+    <string name="label_command_data">命令(最大长度20): </string>
+    <string name="label_command_name">名称: </string>
+    <string name="label_write_data">写入命令: </string>
+    <string name="label_read_data">读取特征值</string>
+    <string name="label_notify_data">Notify数据: </string>
+    <string name="label_command_name_hint">输入名称</string>
+    <string name="label_write_data_hint">输入16进制字符(最大长度20)</string>
+    <string name="label_notify_characteristic_data">Notify Data:</string>
+    <string name="label_data">数据:</string>
+    <string name="label_device_address">Mac:</string>
+    <string name="label_state">蓝牙状态:</string>
+    <string name="no_data">没有数据</string>
+    <string name="connected">已连接</string>
+    <string name="disconnected">蓝牙断开</string>
+    <string name="label_cancel">取消</string>
+    <string name="label_ok">确定</string>
+    <string name="button_share">分享</string>
+    <string name="button_clear">清除</string>
+
+    <string name="label_lbe_permissions" formatted="false">Permissions:\t%s</string>
+    <string name="label_lbe_properties" formatted="false">Properties:\t%s</string>
+    <string name="label_lbe_write_type" formatted="false">WriteType:\t%s</string>
+
+
+    <string name="label_command" formatted="false">命令</string>
+    <string name="label_action_add_command" formatted="false">添加命令</string>
+    <string name="label_config_commands" formatted="false">命令</string>
+    <string name="label_config_devices" formatted="false">设备</string>
+
+    <string name="app_tips_bluetooth_data_max_len">Bluetooth4.0数据最大长度20字节</string>
+    <string name="app_tips_command_empty">命令不能为空</string>
+    <string name="app_tips_name_empty">名称不能为空</string>
+
+    <string name="app_tips_data_must_be_even">数据长度需要是偶数</string>
+    <string name="app_tips_write_read_data">读写数据</string>
+    <string name="app_tips_connect_fail">蓝牙连接失败</string>
+    <string name="app_tips_discover_services_fail">蓝牙服务发现失败</string>
+    <string name="app_tips_notify_data_too_long">数据太多了,不再保存了…</string>
+
+    <string name="app_ble_status_0">初始化</string>
+    <string name="app_ble_status_1">扫描中</string>
+    <string name="app_ble_status_2">连接中</string>
+    <string name="app_ble_status_3">连接成功</string>
+    <string name="app_ble_status_4">服务发现中</string>
+    <string name="app_ble_status_5">服务发现成功</string>
+    <string name="app_ble_status_6">连接断开中</string>
+    <string name="app_ble_status_7">已断开</string>
+    <string name="app_ble_status_8">手机蓝牙关闭</string>
+    <string name="app_ble_status_9">服务发现失败</string>
+
+
+</resources>

@@ -11,6 +11,8 @@
     <color name="colorAccent">#C4C9E8</color>
     <color name="colorPrimaryLight">#C4C9E8</color>
     <!-- overwrite the selected colors because the primary color is to dark -->
+
+    <color name="material_teal_500">#009688</color>
     <color name="material_drawer_selected_text">#536EEA</color>
     <color name="material_drawer_dark_selected_text">#536EEA</color>
 

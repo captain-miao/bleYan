@@ -50,6 +50,7 @@
                 android:layout_height="wrap_content"
                 android:digits="0123456789ABCDEF"
                 android:hint="@string/label_write_data_hint"
+                android:maxLength="21"
                 android:inputType="textCapCharacters"
                 android:singleLine="true"
                 android:textSize="14sp" />

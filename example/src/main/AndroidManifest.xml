@@ -37,11 +37,7 @@
             android:theme="@style/ActivityThemeNoBar"
             android:screenOrientation="portrait">
         </activity>
-        <activity
-            android:name=".BleCharacteristicActivity"
-            android:theme="@style/ActivityThemeNoBar"
-            android:screenOrientation="portrait">
-        </activity>
+
         <service android:name=".ble.AppBleService" />
     </application>
 

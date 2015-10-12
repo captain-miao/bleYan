@@ -51,6 +51,7 @@
                 android:digits="0123456789ABCDEF"
                 android:hint="@string/label_write_data_hint"
                 android:inputType="textCapCharacters"
+                android:maxLength="21"
                 android:singleLine="true"
                 android:textSize="14sp" />
         </LinearLayout>

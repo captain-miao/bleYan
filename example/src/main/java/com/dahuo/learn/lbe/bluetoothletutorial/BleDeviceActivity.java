@@ -5,12 +5,16 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,6 +24,8 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.internal.MDTintHelper;
+import com.afollestad.materialdialogs.util.DialogUtils;
 import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
 import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 import com.dahuo.learn.lbe.blelibrary.BleCallback;
@@ -170,7 +176,7 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
             if(sb != null && sb.length() < 100 * 1024) {
                 sb.append(values).append("\n");
             } else {
-                mDataField.append("data length is too long...");
+                mDataField.append(getString(R.string.app_tips_notify_data_too_long));
             }
         }
 
@@ -182,7 +188,7 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void onConnectionStateChange(int status, int newStatus) {
             BleConnectState connectState = BleConnectState.getBleConnectState(newStatus);
-            mTVConnectionState.setText(connectState.getMessage());
+            mTVConnectionState.setText(AppBluetoothHelper.getConnectStateForShow(BleDeviceActivity.this, connectState.getCode()));
         }
 
         @Override
@@ -191,7 +197,7 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
             if (gatt != null && status == BluetoothGatt.GATT_SUCCESS) {
                 displayGattServices(gatt.getServices());
             } else {
-                AppToast.show(BleDeviceActivity.this, "discover services fail");
+                AppToast.show(BleDeviceActivity.this, R.string.app_tips_discover_services_fail);
             }
         }
     };
@@ -208,7 +214,7 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
             @Override
             protected void onClickCharacteristic(final String serviceUUID, final String characteristicUUID) {
                 dialog = new MaterialDialog.Builder(BleDeviceActivity.this)
-                        .title("Write/Read")
+                        .title(R.string.app_tips_write_read_data)
                         .customView(R.layout.dialog_customview, true)
                         .positiveText(R.string.label_ok)
                         .cancelable(true)
@@ -222,22 +228,41 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
                     mDataCharacteristic = (TextView) dialogView.findViewById(R.id.tv_read_characteristic_data);
                     final EditText hexEdit = (EditText) dialogView.findViewById(R.id.write_data_value);
                     if (hexEdit != null) {
+                        hexEdit.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                final int length = s.toString().length();
+                                invalidateInputMinMaxIndicator(hexEdit, length);
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable s) {
+
+                            }
+                        });
                         View positive = dialog.getActionButton(DialogAction.POSITIVE);
                         positive.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 String hex = hexEdit.getText().toString();
                                 if (!TextUtils.isEmpty(hex)) {
-                                    if(hex.length() % 2 == 0) {
+                                    if (hex.length() > 20) {
+                                        AppToast.showCenter(BleDeviceActivity.this, R.string.app_tips_bluetooth_data_max_len);
+                                    } else if (hex.length() % 2 == 0) {
                                         mBleHelper.writeCharacteristic(UUID.fromString(serviceUUID),
                                                 UUID.fromString(characteristicUUID),
                                                 HexUtil.hexStringToByteArray(hex));
                                         dialog.dismiss();
                                     } else {
-                                        AppToast.showCenter(BleDeviceActivity.this, "write data length must even");
+                                        AppToast.showCenter(BleDeviceActivity.this, R.string.app_tips_data_must_be_even);
                                     }
                                 } else {
-                                    AppToast.showCenter(BleDeviceActivity.this, "write data is empty");
+                                    AppToast.showCenter(BleDeviceActivity.this, R.string.app_tips_command_empty);
                                 }
                             }
                         });
@@ -248,7 +273,7 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
                             public void onClick(View v) {
                                 final BleCommandInfo[] commandInfos = BleCommandInfo.queryAllCommands();
                                 new MaterialDialog.Builder(mContext)
-                                        .title("Command")
+                                        .title(R.string.label_command)
                                         .items(commandInfos)
                                         .itemsCallback(new MaterialDialog.ListCallback() {
                                             @Override
@@ -370,7 +395,7 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onConnectFailed(ConnectError error) {
                 dismissProgressDialog();
-                AppToast.show(BleDeviceActivity.this, "connected fail");
+                AppToast.show(BleDeviceActivity.this, R.string.app_tips_connect_fail);
             }
         });
     }
@@ -456,6 +481,25 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
     public void onClear(View view) {
         if(sb != null) {
             sb = new StringBuffer();
+        }
+    }
+
+
+    protected void invalidateInputMinMaxIndicator(EditText input, int currentLength) {
+        if (input != null) {
+            int materialBlue = ContextCompat.getColor(this, com.afollestad.materialdialogs.R.color.md_material_blue_600);
+            int widgetColor = DialogUtils.resolveColor(this, com.afollestad.materialdialogs.R.attr.colorAccent, materialBlue);
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                widgetColor = DialogUtils.resolveColor(this, android.R.attr.colorAccent, widgetColor);
+            }
+            final boolean isDisabled = currentLength > 20;
+            final int colorText = isDisabled ? ContextCompat.getColor(this, R.color.red)
+                    : -1;
+            final int colorWidget = isDisabled ? ContextCompat.getColor(this, R.color.red)
+                    : widgetColor;
+            input.setTextColor(colorText);
+            MDTintHelper.setTint(input, colorWidget);
         }
     }
 }

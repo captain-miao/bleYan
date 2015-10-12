@@ -1,10 +1,14 @@
 package com.dahuo.learn.lbe.bluetoothletutorial.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +20,8 @@ import android.widget.EditText;
 import com.activeandroid.query.Select;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.internal.MDTintHelper;
+import com.afollestad.materialdialogs.util.DialogUtils;
 import com.dahuo.learn.lbe.bluetoothletutorial.R;
 import com.dahuo.learn.lbe.bluetoothletutorial.adapter.DeviceCommandAdapter;
 import com.dahuo.learn.lbe.bluetoothletutorial.constant.AppConstants;
@@ -99,7 +105,7 @@ public class DevicesCommandFragment extends BaseFragment {
         switch (item.getItemId()) {
             case R.id.ble_command_action_add:
                 final MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
-                        .title("Add Command")
+                        .title(R.string.label_action_add_command)
                         .customView(R.layout.dialog_customview_command, true)
                         .positiveText(R.string.label_ok)
                         .cancelable(true)
@@ -109,7 +115,23 @@ public class DevicesCommandFragment extends BaseFragment {
                 if (dialogView != null) {
                     final EditText nameEdit = (EditText) dialogView.findViewById(R.id.et_command_name);
                     final EditText hexEdit = (EditText) dialogView.findViewById(R.id.et_command_data);
+                    hexEdit.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            final int length = s.toString().length();
+                            invalidateInputMinMaxIndicator(hexEdit, length);
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+
+                        }
+                    });
                     View positive = dialog.getActionButton(DialogAction.POSITIVE);
                     positive.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -117,17 +139,21 @@ public class DevicesCommandFragment extends BaseFragment {
                             String name = nameEdit.getText().toString();
                             String hex = hexEdit.getText().toString();
                             if (!TextUtils.isEmpty(hex)) {
-                                if (!TextUtils.isEmpty(name)) {
-                                    BleCommandInfo cmd = new BleCommandInfo(name, hex);
-                                    cmd.save();
-                                    mAdapter.append(cmd);
-                                    mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
-                                    dialog.dismiss();
+                                if (hex.length() > 20) {
+                                    AppToast.showCenter(getActivity(), R.string.app_tips_bluetooth_data_max_len);
                                 } else {
-                                    AppToast.showCenter(getActivity(), "command is empty");
+                                    if (!TextUtils.isEmpty(name)) {
+                                        BleCommandInfo cmd = new BleCommandInfo(name, hex);
+                                        cmd.save();
+                                        mAdapter.append(cmd);
+                                        mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
+                                        dialog.dismiss();
+                                    } else {
+                                        AppToast.showCenter(getActivity(), R.string.app_tips_name_empty);
+                                    }
                                 }
                             } else {
-                                AppToast.showCenter(getActivity(), "name is empty");
+                                AppToast.showCenter(getActivity(), R.string.app_tips_command_empty);
                             }
                         }
                     });
@@ -135,6 +161,25 @@ public class DevicesCommandFragment extends BaseFragment {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    protected void invalidateInputMinMaxIndicator(EditText inputMinMax, int currentLength) {
+        if (inputMinMax != null) {
+            int materialBlue = ContextCompat.getColor(getActivity(), com.afollestad.materialdialogs.R.color.md_material_blue_600);
+            int widgetColor = DialogUtils.resolveColor(getActivity(), com.afollestad.materialdialogs.R.attr.colorAccent, materialBlue);
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                widgetColor = DialogUtils.resolveColor(getActivity(), android.R.attr.colorAccent, widgetColor);
+            }
+            final boolean isDisabled = currentLength > 20;
+            final int colorText = isDisabled ? ContextCompat.getColor(getActivity(), R.color.red)
+                    : -1;
+            final int colorWidget = isDisabled ? ContextCompat.getColor(getActivity(), R.color.red)
+                    : widgetColor;
+            inputMinMax.setTextColor(colorText);
+            MDTintHelper.setTint(inputMinMax, colorWidget);
+        }
     }
 
 }
