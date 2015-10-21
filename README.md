@@ -1,7 +1,7 @@
 # bleYan
-It's a simple BLE library.
-apk download:http://fir.im/bleYan
-
+It's a simple BLE library.    
+Android apk download:http://fir.im/bleYan    
+For iOS (BabyBluetooth) https://github.com/coolnameismy/BabyBluetooth   
 ##  0. bleYan tools
 ![ble_yan_screenshot](/screenshot/screenshot.jpg?raw=true "ble_scan_screenshot")
 ##  1. create Bluetooth Low Energy service
