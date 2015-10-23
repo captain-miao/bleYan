@@ -17,5 +17,5 @@ public class AppConstants {
     public static final String KEY_BLE_SERVICE = "key_ble_service";
     public static final String KEY_BLE_CHARACTERISTIC = "key_ble_characteristic";
 
-
+    public static final int PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 69;
 }

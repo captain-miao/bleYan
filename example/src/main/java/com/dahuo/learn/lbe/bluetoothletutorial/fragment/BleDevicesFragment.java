@@ -1,7 +1,10 @@
 package com.dahuo.learn.lbe.bluetoothletutorial.fragment;
 
 import android.Manifest;
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -120,7 +123,6 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
         mRecyclerView.setAdapter(mAdapter);
         mBleScanner = new BleScanner(getContext(), BleDevicesFragment.this);
         checkPermissionAndStartScan();
-        showRequestPermissionAccessCoarseLocation();
     }
 
 
@@ -229,38 +231,23 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
 
 
 
-    /**
-     * Id to identify a permission request.
-     */
-    private static final int REQUEST_CODE = 8;
+
     String[] permission = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION};
-    /**
-     * Called when the 'show camera' button is clicked.
-     * Callback is defined in resource layout definition.
-     */
-    public void showRequestPermissionAccessCoarseLocation() {
-        Log.i(TAG, "Show Request Permission button pressed. Checking permission.");
-        // Check if the  permission is already available.
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermission();
-
-        } else {
-
-            // permissions is already available
-            //Toast.makeText(HomeActivity.this, "coarse location permission granted", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
     public void checkPermissionAndStartScan() {
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermission();
-        } else {
-            // permissions is already available
-            mBleScanner.startBleScan();
+                //请求打开蓝牙
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter != null && !BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            Intent mIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(mIntent, 1);
+        } else if (bluetoothAdapter != null) {
+            if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                    && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermission();
+            } else {
+                // permissions is already available
+                mBleScanner.startBleScan();
+            }
         }
     }
 
@@ -284,19 +271,54 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
 
                         @Override
                         public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                            ActivityCompat.requestPermissions(getActivity(),
-                                   permission,
-                                   REQUEST_CODE);
+                            requestPermissions(permission, AppConstants.PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
                         }
                     })
-                    .cancelable(true)
+                    .cancelable(false)
                     .negativeText(R.string.label_cancel)
                     .show();
 
         } else {
 
             //permission has not been granted yet. Request it directly.
-            requestPermissions(permission, REQUEST_CODE);
+            requestPermissions(permission, AppConstants.PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+        }
+    }
+
+    @Override
+   	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+   		//允许打开蓝牙
+   		if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
+   			// 判断是否需要绑定
+
+        } else {
+   			super.onActivityResult(requestCode, resultCode, data);
+   		}
+   	}
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case AppConstants.PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay!
+                    mBleScanner.startBleScan();
+                } else {
+
+                    // permission denied, boo! Disable theSince location access has not been granted...
+                    // functionality that depends on this permission.
+                    new MaterialDialog.Builder(getActivity())
+                            .title(R.string.label_permission_denial_title)
+                            .content(R.string.label_permission_denial_content)
+                            .positiveText(R.string.label_ok)
+                            .cancelable(true)
+                            .show();
+                }
+            }
         }
     }
 
