@@ -57,6 +57,10 @@
     <string name="label_action_add_command" formatted="false">Add Command</string>
 
 
+    <string name="label_request_permission_title" formatted="false">Request Permission</string>
+    <string name="label_request_permission_content" formatted="false">Please grant location access, Android6.0 needs location access for ble scan</string>
+
+
     <string name="label_config_commands" formatted="false">COMMANDS</string>
     <string name="label_config_devices" formatted="false">DEVICES</string>
     <string name="app_tips_bluetooth_data_max_len">Bluetooth4.0 data max len 20</string>

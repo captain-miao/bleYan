@@ -25,6 +25,7 @@ import it.neokree.materialnavigationdrawer.elements.MaterialSection;
 import it.neokree.materialnavigationdrawer.elements.listeners.MaterialAccountListener;
 
 public class HomeActivity extends MaterialNavigationDrawer implements MaterialAccountListener {
+    public static final String TAG = "HomeActivity";
     MaterialAccount account;
 
     @Override

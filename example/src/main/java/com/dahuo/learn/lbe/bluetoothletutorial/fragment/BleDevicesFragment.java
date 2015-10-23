@@ -1,12 +1,17 @@
 package com.dahuo.learn.lbe.bluetoothletutorial.fragment;
 
+import android.Manifest;
 import android.bluetooth.BluetoothDevice;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.dahuo.learn.lbe.blelibrary.BleScanner;
 import com.dahuo.learn.lbe.blelibrary.SimpleScanCallback;
 import com.dahuo.learn.lbe.blelibrary.constant.BleScanState;
@@ -93,7 +100,7 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
                 bleDeviceHashMap.clear();
                 mAdapter.clear();
                 mAdapter.notifyDataSetChanged();
-                mBleScanner.startBleScan();
+                checkPermissionAndStartScan();
                 //
                 mSwipeRefreshLayout.postDelayed(new Runnable() {
                     @Override
@@ -112,7 +119,8 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
         mAdapter.setHasFooter(false);
         mRecyclerView.setAdapter(mAdapter);
         mBleScanner = new BleScanner(getContext(), BleDevicesFragment.this);
-        mBleScanner.startBleScan();
+        checkPermissionAndStartScan();
+        showRequestPermissionAccessCoarseLocation();
     }
 
 
@@ -120,7 +128,7 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
     public void onResume() {
         super.onResume();
         if(mBleScanner != null && mBleScanner.isScanning()){
-            mBleScanner.bleScanner.onStartBleScan();
+            checkPermissionAndStartScan();
         }
     }
 
@@ -155,7 +163,7 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
                     bleDeviceHashMap.clear();
                     mAdapter.clear();
                     mAdapter.notifyDataSetChanged();
-                    mBleScanner.startBleScan();
+                    checkPermissionAndStartScan();
                 }
                 break;
             }
@@ -218,5 +226,78 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
 
 
     private HashMap<String, BluetoothDevice> bleDeviceHashMap = new HashMap<>();
+
+
+
+    /**
+     * Id to identify a permission request.
+     */
+    private static final int REQUEST_CODE = 8;
+    String[] permission = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION};
+    /**
+     * Called when the 'show camera' button is clicked.
+     * Callback is defined in resource layout definition.
+     */
+    public void showRequestPermissionAccessCoarseLocation() {
+        Log.i(TAG, "Show Request Permission button pressed. Checking permission.");
+        // Check if the  permission is already available.
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermission();
+
+        } else {
+
+            // permissions is already available
+            //Toast.makeText(HomeActivity.this, "coarse location permission granted", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void checkPermissionAndStartScan() {
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermission();
+        } else {
+            // permissions is already available
+            mBleScanner.startBleScan();
+        }
+    }
+
+    /**
+     * Requests the permission.
+     */
+    private void requestPermission() {
+
+        if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example if the user has previously denied the permission.
+            Log.i(TAG, "Displaying permission rationale to provide additional context.");
+
+
+            new MaterialDialog.Builder(getActivity())
+                    .title(R.string.label_request_permission_title)
+                    .content(R.string.label_request_permission_content)
+                    .positiveText(R.string.label_ok)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+
+                        @Override
+                        public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                            ActivityCompat.requestPermissions(getActivity(),
+                                   permission,
+                                   REQUEST_CODE);
+                        }
+                    })
+                    .cancelable(true)
+                    .negativeText(R.string.label_cancel)
+                    .show();
+
+        } else {
+
+            //permission has not been granted yet. Request it directly.
+            requestPermissions(permission, REQUEST_CODE);
+        }
+    }
 
 }

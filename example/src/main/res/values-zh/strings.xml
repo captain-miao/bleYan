@@ -60,6 +60,9 @@
     <string name="label_config_commands" formatted="false">命令</string>
     <string name="label_config_devices" formatted="false">设备</string>
 
+    <string name="label_request_permission_title" formatted="false">权限申请</string>
+    <string name="label_request_permission_content" formatted="false">Android6.0蓝牙扫描需要位置权限(因为蓝牙可以测试距离?)，否则将无法扫描设备</string>
+
     <string name="app_tips_bluetooth_data_max_len">Bluetooth4.0数据最大长度20字节</string>
     <string name="app_tips_command_empty">命令不能为空</string>
     <string name="app_tips_name_empty">名称不能为空</string>
