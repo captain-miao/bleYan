@@ -288,8 +288,8 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
     @Override
    	public void onActivityResult(int requestCode, int resultCode, Intent data) {
    		//允许打开蓝牙
-   		if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
-   			// 判断是否需要绑定
+   		if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+
 
         } else {
    			super.onActivityResult(requestCode, resultCode, data);

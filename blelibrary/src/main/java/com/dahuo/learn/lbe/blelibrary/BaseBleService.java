@@ -244,11 +244,16 @@ public abstract class BaseBleService extends Service implements SimpleScanCallba
 		mGatt = device.connectGatt(this, autoConnect, mGattCallback);
 
 		if(mGatt != null){
-			return mGatt.connect();
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mGatt.connect();
+                }
+            });
 		} else {
 			BleLog.e(TAG, "serviceConnect mGatt==null");
 		}
-		return false;
+		return true;
 	}
 
 	public boolean connectDevice(final BluetoothDevice device) {
@@ -407,16 +412,27 @@ public abstract class BaseBleService extends Service implements SimpleScanCallba
 		BleLog.i(TAG, "release()");
 		sIsWriting = false;
 		sWriteQueue.clear();
-		try {
-			if (mGatt != null) {
-				mGatt.disconnect();
-				mGatt.close();
-				mGatt = null;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mGatt.disconnect();
+            }
+        });
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (mGatt != null) {
+                        mGatt.close();
+                        mGatt = null;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, 500);
+    }
 
 	@Override
 	public void onDestroy() {
