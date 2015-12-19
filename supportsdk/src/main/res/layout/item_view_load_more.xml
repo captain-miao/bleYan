@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true">
 
-        <com.dahuo.learn.refresh.MaterialProgressBarSupport
+        <com.github.captain_miao.refresh.MaterialProgressBarSupport
             android:id="@+id/progress_view"
             android:layout_width="56dp"
             android:layout_height="56dp"
