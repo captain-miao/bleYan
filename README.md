@@ -18,6 +18,7 @@ dependencies {
 	    compile 'com.github.captain-miao:ble:1.0.0-SNAPSHOT'
 }
 ```
+
 ##  1. create Bluetooth Low Energy service
 ```
 public class AppBleService extends BaseBleService {
