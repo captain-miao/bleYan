@@ -2,8 +2,22 @@
 It's a simple BLE library.    
 Android apk download:http://fir.im/bleYan    
 For iOS (BabyBluetooth) https://github.com/coolnameismy/BabyBluetooth   
-##  0. bleYan tools
+##  FF. bleYan tools
 ![ble_yan_screenshot](/screenshot/screenshot.jpg?raw=true "ble_scan_screenshot")
+
+##  0. Usage
+In order to use the library, Gradle dependency:
+
+ - 	Add the following to your `build.gradle`:
+ ```gradle
+repositories {
+	    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+}
+
+dependencies {
+	    compile 'com.github.captain-miao:ble:1.0.0-SNAPSHOT'
+}
+```
 ##  1. create Bluetooth Low Energy service
 ```
 public class AppBleService extends BaseBleService {
