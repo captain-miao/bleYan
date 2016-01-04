@@ -16,7 +16,7 @@ import java.util.List;
  * @author YanLu
  * @since 15/9/14
  *
- * Android5.0 above
+ * Android5.0 above scan bluetooth
  */
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)

@@ -12,7 +12,7 @@ import com.github.captain_miao.android.ble.utils.BleLog;
  * @author YanLu
  * @since 15/9/14
  *
- * Android4.3 和 4.4 的蓝牙扫描
+ * Android4.3 and 4.4 scan bluetooth
  */
 
 public class JellyBeanBleScanner extends BaseBleScanner {
