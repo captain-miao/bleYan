@@ -155,4 +155,4 @@ mBleHelper = new AppBluetoothHelper(Context context, BleCallback bleCallback);
 ```
 usage(Chinese):https://yanlu.me/android-bluetooth-low-energy/  
 apk download:http://fir.im/bleYan  
-QQ Group:124884323
+QQ Group:436275452
