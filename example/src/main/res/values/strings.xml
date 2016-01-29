@@ -56,7 +56,9 @@
 
     <string name="label_action_add_command" formatted="false">Add Command</string>
 
-
+    <string name="label_command" formatted="false">Command</string>
+    <string name="label_request_open_gps_title" formatted="false">Turn On GPS</string>
+    <string name="label_request_open_gps_content" formatted="false">Please turn on the GPS, enabling GPS on Android 6.0 makes the scanner finding BLE devices.</string>
     <string name="label_request_permission_title" formatted="false">Request Permission</string>
     <string name="label_request_permission_content" formatted="false">Please grant location access, Android6.0 needs location access for ble scan</string>
     <string name="label_permission_denial_title" formatted="false">Permission Denial</string>

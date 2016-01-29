@@ -4,10 +4,13 @@ import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -48,6 +51,9 @@ import java.util.List;
 
 public class BleDevicesFragment extends BaseFragment implements SimpleScanCallback {
     private static final String TAG = BleDevicesFragment.class.getSimpleName();
+
+    private static final int REQUEST_CODE_OPEN_BLE = 1;
+    private static final int REQUEST_CODE_OPEN_GPS = 2;
 
     private String mTitle;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -240,10 +246,19 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
             Intent mIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(mIntent, 1);
         } else if (bluetoothAdapter != null) {
-            if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                    && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                requestPermission();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (isGpsOPen(getContext())) {
+                    if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                            && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        requestPermission();
+                    } else {
+                        // permissions is already available
+                        mBleScanner.startBleScan();
+                    }
+                } else {
+                    displayPromptForEnablingGPS();
+                }
             } else {
                 // permissions is already available
                 mBleScanner.startBleScan();
@@ -287,10 +302,38 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
 
     @Override
    	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-   		//允许打开蓝牙
-   		if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+   		if (requestCode == REQUEST_CODE_OPEN_BLE && resultCode == Activity.RESULT_OK) {
+   		    // 打开蓝牙
+            if (isGpsOPen(getContext())) {
+                BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                if (bluetoothAdapter != null) {
+                    if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                            && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        requestPermission();
+                    } else {
+                        // permissions is already available
+                        mBleScanner.startBleScan();
+                    }
+                }
+            } else {
+                // 开启GPS
+                displayPromptForEnablingGPS();
+            }
 
-
+        } else if (requestCode == REQUEST_CODE_OPEN_GPS && resultCode == Activity.RESULT_OK) {
+            // 开启GPS
+            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if (bluetoothAdapter != null) {
+                if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                        && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    requestPermission();
+                } else {
+                    // permissions is already available
+                    mBleScanner.startBleScan();
+                }
+            }
         } else {
    			super.onActivityResult(requestCode, resultCode, data);
    		}
@@ -320,6 +363,49 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
                 }
             }
         }
+    }
+
+
+    public void displayPromptForEnablingGPS() {
+        final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
+
+
+        new MaterialDialog.Builder(getActivity())
+                .title(R.string.label_request_open_gps_title)
+                .content(R.string.label_request_open_gps_content)
+                .positiveText(R.string.label_ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        startActivityForResult(new Intent(action), REQUEST_CODE_OPEN_GPS);
+                    }
+                })
+                .negativeText(R.string.label_cancel)
+                .cancelable(true)
+                .negativeText(R.string.label_cancel)
+                .show();
+    }
+
+
+    /**
+     * 判断GPS是否开启，GPS或者AGPS开启一个就认为是开启的
+     *
+     * @param context
+     * @return true 表示开启
+     */
+    public static final boolean isGpsOPen(final Context context) {
+        LocationManager locationManager
+                = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        // 通过GPS卫星定位，定位级别可以精确到街（通过24颗卫星定位，在室外和空旷的地方定位准确、速度快）
+        boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        // 通过WLAN或移动网络(3G/2G)确定的位置（也称作AGPS，辅助GPS定位。主要用于在室内或遮盖物（建筑群或茂密的深林等）密集的地方定位）
+        boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        if (gps || network) {
+            return true;
+        }
+
+        return false;
     }
 
 }

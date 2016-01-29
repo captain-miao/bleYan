@@ -45,6 +45,7 @@
     <string name="no_data">没有数据</string>
     <string name="connected">已连接</string>
     <string name="disconnected">蓝牙断开</string>
+    <string name="title_devices">蓝牙设备扫描</string>
     <string name="label_cancel">取消</string>
     <string name="label_ok">确定</string>
     <string name="button_share">分享</string>
@@ -60,6 +61,8 @@
     <string name="label_config_commands" formatted="false">命令</string>
     <string name="label_config_devices" formatted="false">设备</string>
 
+    <string name="label_request_open_gps_title" formatted="false">开启GPS</string>
+    <string name="label_request_open_gps_content" formatted="false">Android6.0开启了GPS才能扫描设备</string>
     <string name="label_request_permission_title" formatted="false">权限申请</string>
     <string name="label_request_permission_content" formatted="false">Android6.0蓝牙扫描需要位置权限(因为蓝牙可以测试距离?)，否则将无法扫描蓝牙设备</string>
     <string name="label_permission_denial_title" formatted="false">权限拒绝</string>
