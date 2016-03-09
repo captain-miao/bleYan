@@ -38,7 +38,7 @@
     <string name="label_notify_data">Notify数据: </string>
     <string name="label_command_name_hint">输入名称</string>
     <string name="label_write_data_hint">输入16进制字符(最大长度20)</string>
-    <string name="label_notify_characteristic_data">Notify Data:</string>
+    <string name="label_notify_characteristic_data">Data:</string>
     <string name="label_data">数据:</string>
     <string name="label_device_address">Mac:</string>
     <string name="label_state">蓝牙状态:</string>

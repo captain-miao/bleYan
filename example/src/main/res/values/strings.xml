@@ -37,7 +37,7 @@
     <string name="label_notify_data">Notify: </string>
     <string name="label_command_name_hint">input name</string>
     <string name="label_write_data_hint">input hex(max length 20 bytes)</string>
-    <string name="label_notify_characteristic_data">Notify Data:</string>
+    <string name="label_notify_characteristic_data">Data:</string>
     <string name="label_data">Data:</string>
     <string name="label_device_address">address:</string>
     <string name="label_state">State:</string>

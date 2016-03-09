@@ -526,11 +526,11 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
     BottomSheetLogView logView = null;
     //蓝牙日志
     public void onShowLogView(View view){
-        if(logView == null) {
+        if(logInfoList.size() < 5) {
             initLogHeight();
-            logView = BottomSheetLogView.show(this, logInfoList);
         }
 
+        logView = BottomSheetLogView.show(this, logInfoList);
         if(!logView.isShowing()) {
             logView.show();
         }
