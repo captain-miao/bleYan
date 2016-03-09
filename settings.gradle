@@ -1,1 +1,6 @@
 include ':example', ':blelibrary', ':supportsdk'
+
+include 'MaterialNavigationDrawerModule'
+project(':MaterialNavigationDrawerModule')
+        .projectDir = new File(settingsDir, '../2016/library/MaterialNavigationDrawer/MaterialNavigationDrawerModule')
+

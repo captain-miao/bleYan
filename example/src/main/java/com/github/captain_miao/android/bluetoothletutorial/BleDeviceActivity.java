@@ -41,10 +41,12 @@ import com.github.captain_miao.android.bluetoothletutorial.constant.AppConstants
 import com.github.captain_miao.android.bluetoothletutorial.expandablerecyclerview.VerticalChildObject;
 import com.github.captain_miao.android.bluetoothletutorial.expandablerecyclerview.VerticalExpandableAdapter;
 import com.github.captain_miao.android.bluetoothletutorial.expandablerecyclerview.VerticalParentObject;
+import com.github.captain_miao.android.bluetoothletutorial.fragment.BottomSheetLogView;
 import com.github.captain_miao.android.bluetoothletutorial.model.BleCommandInfo;
 import com.github.captain_miao.android.bluetoothletutorial.model.BleDevice;
 import com.github.captain_miao.android.supportsdk.BaseActivity;
 import com.github.captain_miao.android.supportsdk.app.AppToast;
+import com.github.captain_miao.android.supportsdk.utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -138,12 +140,13 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
     private BleCallback mBleCallback = new BleCallback() {
         @Override
         public void onFailed(String msg) {
-
+            appendLog("onFailed " + msg);
         }
 
         @Override
         public void onDescriptorWrite(UUID uuid, int status) {
             AppLog.i(TAG, "onDescriptorWrite: " + BleUtils.getGattStatus(status));
+            appendLog("onDescWrite: " + BleUtils.getGattStatus(status));
         }
 
         @Override
@@ -151,6 +154,7 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
             String values = HexUtil.encodeHexStr(data);
 
             AppLog.i(TAG, "onCharacteristicRead: " + values);
+            appendLog("onCharRead: " + values);
             if (dialog != null && dialog.isShowing()) {
                 mDataCharacteristic.setText(values);
             }
@@ -160,6 +164,7 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
         public void onCharacteristicNotification(UUID uuid, byte[] data) {
             String values = HexUtil.encodeHexStr(data);
             AppLog.i(TAG, "onCharacteristicNotification: " + values);
+            appendLog("onChaNotify: " + values);
             mDataQueue.add(values);
             int size = mDataQueue.size();
             while (size > 10){
@@ -183,12 +188,14 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void onCharacteristicWrite(UUID uuid, int status) {
             AppLog.i(TAG, "onCharacteristicWrite: " + BleUtils.getGattStatus(status));
+            appendLog("onCharWrite: " + BleUtils.getGattStatus(status));
         }
 
         @Override
         public void onConnectionStateChange(int status, int newStatus) {
             BleConnectState connectState = BleConnectState.getBleConnectState(newStatus);
             mTVConnectionState.setText(AppBluetoothHelper.getConnectStateForShow(BleDeviceActivity.this, connectState.getCode()));
+            appendLog("stateChange: " + AppBluetoothHelper.getConnectStateForShow(BleDeviceActivity.this, connectState.getCode()));
         }
 
         @Override
@@ -196,8 +203,10 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
             //服务发现成功
             if (gatt != null && status == BluetoothGatt.GATT_SUCCESS) {
                 displayGattServices(gatt.getServices());
+                appendLog("Discovered success");
             } else {
                 AppToast.show(BleDeviceActivity.this, R.string.app_tips_discover_services_fail);
+                appendLog("Discovered fail");
             }
         }
     };
@@ -482,8 +491,18 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
         if(sb != null) {
             sb = new StringBuffer();
         }
+        logInfoList.clear();
+        initLogHeight();
     }
 
+    //5条空数据 为了可以显示BottomSheetDialog
+    private void initLogHeight(){
+        logInfoList.add("");
+        logInfoList.add("");
+        logInfoList.add("");
+        logInfoList.add("");
+        logInfoList.add("");
+    }
 
     protected void invalidateInputMinMaxIndicator(EditText input, int currentLength) {
         if (input != null) {
@@ -500,6 +519,27 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
                     : widgetColor;
             input.setTextColor(colorText);
             MDTintHelper.setTint(input, colorWidget);
+        }
+    }
+
+    List<String> logInfoList = new ArrayList<String>();
+    BottomSheetLogView logView = null;
+    //蓝牙日志
+    public void onShowLogView(View view){
+        if(logView == null) {
+            initLogHeight();
+            logView = BottomSheetLogView.show(this, logInfoList);
+        }
+
+        if(!logView.isShowing()) {
+            logView.show();
+        }
+    }
+
+    private void appendLog(String log) {
+        logInfoList.add(DateUtils.formatDateDefault(System.currentTimeMillis()) + log);
+        if (logView != null) {
+            logView.appendLog(DateUtils.formatDateDefault(System.currentTimeMillis()) + log);
         }
     }
 }

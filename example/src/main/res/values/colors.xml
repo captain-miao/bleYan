@@ -60,4 +60,5 @@
 
 
     <color name="light_grey">#cccccc</color>
+    <color name="colorDivider">#60000000</color>
 </resources>

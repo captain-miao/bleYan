@@ -240,7 +240,7 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
 
     String[] permission = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION};
     public void checkPermissionAndStartScan() {
-                //请求打开蓝牙
+        //请求打开蓝牙
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter != null && !BluetoothAdapter.getDefaultAdapter().isEnabled()) {
             Intent mIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);

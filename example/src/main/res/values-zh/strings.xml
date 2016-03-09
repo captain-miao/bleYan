@@ -50,6 +50,7 @@
     <string name="label_ok">确定</string>
     <string name="button_share">分享</string>
     <string name="button_clear">清除</string>
+    <string name="button_log">日志</string>
 
     <string name="label_lbe_permissions" formatted="false">Permissions:\t%s</string>
     <string name="label_lbe_properties" formatted="false">Properties:\t%s</string>
@@ -77,6 +78,7 @@
     <string name="app_tips_connect_fail">蓝牙连接失败</string>
     <string name="app_tips_discover_services_fail">蓝牙服务发现失败</string>
     <string name="app_tips_notify_data_too_long">数据太多了,不再保存了…</string>
+    <string name="app_ble_log">蓝牙日志</string>
 
     <string name="app_ble_status_0">初始化</string>
     <string name="app_ble_status_1">扫描中</string>

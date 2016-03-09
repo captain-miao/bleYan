@@ -65,9 +65,7 @@ public class HomeActivity extends MaterialNavigationDrawer implements MaterialAc
                     .icon(FontAwesome.Icon.faw_github)
                     .color(Color.WHITE)
                     .sizeDp(24),
-                new LibsBuilder()
-                        //get the fragment
-                        .fragment());
+                new LibsBuilder().fragment());
         MaterialSection aboutSection =
                 newSection(getString(R.string.app_about),
                 new IconicsDrawable(this)

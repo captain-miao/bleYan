@@ -49,6 +49,7 @@
     <string name="label_ok">OK</string>
     <string name="button_share">SHARE</string>
     <string name="button_clear">CLEAR</string>
+    <string name="button_log">LOG</string>
 
     <string name="label_lbe_permissions" formatted="false">Permissions:\t%s</string>
     <string name="label_lbe_properties" formatted="false">Properties:\t%s</string>
@@ -75,6 +76,7 @@
     <string name="app_tips_connect_fail">connect fail</string>
     <string name="app_tips_discover_services_fail">discover services fail</string>
     <string name="app_tips_notify_data_too_long">data length is too long…</string>
+    <string name="app_ble_log">Ble Log</string>
 
 
     <string name="app_ble_status_0">BLE Initialed</string>
