@@ -12,12 +12,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +26,8 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.example.captain_miao.grantap.ListenerPermission;
+import com.example.captain_miao.grantap.listeners.PermissionListener;
 import com.github.captain_miao.android.ble.BleScanner;
 import com.github.captain_miao.android.ble.SimpleScanCallback;
 import com.github.captain_miao.android.ble.constant.BleScanState;
@@ -49,7 +49,7 @@ import java.util.List;
  * @since 2015-07-23
  */
 
-public class BleDevicesFragment extends BaseFragment implements SimpleScanCallback {
+public class BleDevicesFragment extends BaseFragment implements SimpleScanCallback, PermissionListener {
     private static final String TAG = BleDevicesFragment.class.getSimpleName();
 
     private static final int REQUEST_CODE_OPEN_BLE = 1;
@@ -61,6 +61,7 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
     private List<BleDevice> mDataList = new ArrayList<>();
     private BleDeviceAdapter mAdapter;
     private BleScanner mBleScanner;
+    private MenuItem mScanAction;
 
     public BleDevicesFragment() {
     }
@@ -157,6 +158,7 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.ble_scan_action, menu);
+        mScanAction = menu.findItem(R.id.ble_action_start);
     }
 
     @Override
@@ -238,84 +240,31 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
 
 
 
-    String[] permission = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION};
+    private void checkPermissions(){
+        ListenerPermission.from(getActivity())
+        .setPermissionListener(this)
+        .setPermissions(permissions)
+        .setRationaleMsg(R.string.label_request_permission_content)
+        .setRationaleConfirmText(R.string.dialog_ok)
+        .setDeniedMsg(R.string.label_permission_denial_content)
+        .setDeniedCloseButtonText(R.string.label_ok)
+        .setGotoSettingButton(false)
+        .check();
+    }
+
+
+    String[] permissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION};
     public void checkPermissionAndStartScan() {
-        //请求打开蓝牙
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter != null && !BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-            Intent mIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(mIntent, 1);
-        } else if (bluetoothAdapter != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (isGpsOPen(getContext())) {
-                    if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                            && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED) {
-                        requestPermission();
-                    } else {
-                        // permissions is already available
-                        mBleScanner.startBleScan();
-                    }
-                } else {
-                    displayPromptForEnablingGPS();
-                }
-            } else {
-                // permissions is already available
-                mBleScanner.startBleScan();
-            }
-        }
+        checkPermissions();
     }
 
-    /**
-     * Requests the permission.
-     */
-    private void requestPermission() {
-
-        if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example if the user has previously denied the permission.
-            Log.i(TAG, "Displaying permission rationale to provide additional context.");
-
-
-            new MaterialDialog.Builder(getActivity())
-                    .title(R.string.label_request_permission_title)
-                    .content(R.string.label_request_permission_content)
-                    .positiveText(R.string.label_ok)
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-
-                        @Override
-                        public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                            requestPermissions(permission, AppConstants.PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
-                        }
-                    })
-                    .cancelable(false)
-                    .negativeText(R.string.label_cancel)
-                    .show();
-
-        } else {
-
-            //permission has not been granted yet. Request it directly.
-            requestPermissions(permission, AppConstants.PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
-        }
-    }
 
     @Override
    	public void onActivityResult(int requestCode, int resultCode, Intent data) {
    		if (requestCode == REQUEST_CODE_OPEN_BLE && resultCode == Activity.RESULT_OK) {
    		    // 打开蓝牙
             if (isGpsOPen(getContext())) {
-                BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                if (bluetoothAdapter != null) {
-                    if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                            && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED) {
-                        requestPermission();
-                    } else {
-                        // permissions is already available
-                        mBleScanner.startBleScan();
-                    }
-                }
+                checkPermissions();
             } else {
                 // 开启GPS
                 displayPromptForEnablingGPS();
@@ -325,14 +274,7 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
             // 开启GPS
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (bluetoothAdapter != null) {
-                if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                        && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    requestPermission();
-                } else {
-                    // permissions is already available
-                    mBleScanner.startBleScan();
-                }
+                checkPermissions();
             }
         } else {
    			super.onActivityResult(requestCode, resultCode, data);
@@ -408,4 +350,38 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
         return false;
     }
 
+    @Override
+    public void permissionGranted() {
+        //请求打开蓝牙
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter != null && !BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            Intent mIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(mIntent, 1);
+        } else if (bluetoothAdapter != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (isGpsOPen(getContext())) {
+                    // permissions is already available
+                    mBleScanner.startBleScan();
+                } else {
+                    displayPromptForEnablingGPS();
+                }
+            } else {
+                // permissions is already available
+                mBleScanner.startBleScan();
+            }
+        }
+    }
+
+    @Override
+    public void permissionDenied() {
+        if(mScanAction != null) {
+            mScanAction.setTitle(R.string.app_ble_scan_start);
+        }
+        if (mBleScanner != null) {
+            mBleScanner.stopBleScan();
+        }
+        bleDeviceHashMap.clear();
+        mAdapter.clear();
+        mAdapter.notifyDataSetChanged();
+    }
 }
