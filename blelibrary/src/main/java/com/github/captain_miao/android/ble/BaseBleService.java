@@ -41,12 +41,12 @@ public abstract class BaseBleService extends Service implements SimpleScanCallba
 	public BleConnectState mState = BleConnectState.INITIALED;
 	private BleScanner mBleScanner;
 
-	//消息队列
+	//Messenger queue
 	private final List<Messenger> mClients = new LinkedList<>();
 	protected static final Queue<Object> sWriteQueue = new ConcurrentLinkedQueue<>();
 	private static boolean sIsWriting = false;
 
-	//发现服务之后，可以做一些初始化操作
+	//after discover services call it.
 	public abstract void onDiscoverServices(final BluetoothGatt gatt);
 
 
@@ -58,7 +58,7 @@ public abstract class BaseBleService extends Service implements SimpleScanCallba
 
 			if (newState == BluetoothProfile.STATE_CONNECTED) {
 				updateState(BleConnectState.CONNECTED);
-				//开始发现服务
+				//start discoverServices
 				BleLog.i(TAG, "gatt.discoverServices()");
 				gatt.discoverServices();
 			} else if (newState == BluetoothProfile.STATE_CONNECTING) {
@@ -66,7 +66,7 @@ public abstract class BaseBleService extends Service implements SimpleScanCallba
 			} else if (newState == BluetoothProfile.STATE_DISCONNECTING) {
 				updateState(BleConnectState.DISCONNECTING);
 			} else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-				//断开了，需要做什么处理？
+				//disconnect
 				sIsWriting = false;
 				sWriteQueue.clear();
 				updateState(BleConnectState.DISCONNECTED);
@@ -78,11 +78,10 @@ public abstract class BaseBleService extends Service implements SimpleScanCallba
 
 			if (status == BluetoothGatt.GATT_SUCCESS) {
 				onDiscoverServices(gatt);
-				//需要返回 gatt
 				updateState(BleConnectState.SERVICE_IS_DISCOVERED);
 			} else {
 				BleUtils.refreshDeviceCache(mGatt);
-				//失败 需要做何处理 129
+				//ServicesDiscovered: such as 129
 				if(mState != BleConnectState.SERVICE_IS_NOT_DISCOVERED) {
                     updateState(mState);
                 }
@@ -206,7 +205,7 @@ public abstract class BaseBleService extends Service implements SimpleScanCallba
 	}
 
 	/**
-	 * 开启蓝牙扫描
+	 * start to scan bluetooth
 	 */
 	public void startScan(){
 		if(mBleScanner == null) {
@@ -216,7 +215,7 @@ public abstract class BaseBleService extends Service implements SimpleScanCallba
 		mBleScanner.startBleScan();
 	}
 	/**
-	 * 停止蓝牙扫描
+	 * stop to scan bluetooth
 	 */
 	public void stopScan(){
 		if(mBleScanner != null) {
@@ -228,7 +227,7 @@ public abstract class BaseBleService extends Service implements SimpleScanCallba
 
 
 	/**
-	 * (直接连接 需要设备可连接范围中)
+	 * when device is range, directly connect
 	 */
 	public boolean directlyConnectDevice(String deviceMac) {
 		return directlyConnectDevice(deviceMac, false);
@@ -280,7 +279,7 @@ public abstract class BaseBleService extends Service implements SimpleScanCallba
 		notifyAllBleClients(msg);
 	}
 
-	//notify 订阅者
+	//notify subscriber
 	public void notifyAllBleClients(Message msg) {
 		for (int i = mClients.size() - 1; i >= 0; i--) {
 			Messenger messenger = mClients.get(i);
@@ -320,7 +319,7 @@ public abstract class BaseBleService extends Service implements SimpleScanCallba
 	 * enable notify or disable notify
 	 */
 	public void updateCharacteristicNotification(UUID serviceUUID, UUID CharacteristicUUID, UUID descriptorUUID, boolean enable) {
-		//接收消息
+
 		final BluetoothGattService service = mGatt == null ? null : mGatt.getService(serviceUUID);
 		if (service != null) {
 			final BluetoothGattCharacteristic readData = service.getCharacteristic(CharacteristicUUID);
@@ -335,7 +334,6 @@ public abstract class BaseBleService extends Service implements SimpleScanCallba
 	}
 
 
-	//读取 特征值
 	public boolean readFromCharacteristic(UUID serviceUUID, UUID CharacteristicUUID){
 		BluetoothGattService gattService = mGatt.getService(serviceUUID);
 		if(gattService != null) {
@@ -390,7 +388,7 @@ public abstract class BaseBleService extends Service implements SimpleScanCallba
     }
     public void removeClient(Messenger messenger) {
         mClients.remove(messenger);
-        //没有了连接...释放蓝牙？
+        // all clients disconnected release ? TODO: 16/4/19
         if(mClients.size() == 0){
             release();
         }
@@ -400,14 +398,13 @@ public abstract class BaseBleService extends Service implements SimpleScanCallba
 		return mGatt;
 	}
 
-	//对于 读写数据，需要使用uuid来区分
 	private synchronized Bundle obtainData(UUID uuid) {
 		Bundle data = new Bundle();
 		data.putSerializable(BleConstants.BLE_MSG_CHARACTERISTIC_UUID_KEY, uuid);
 		return data;
 	}
 
-	//释放蓝牙
+	//release about ble
 	public void release() {
 		BleLog.i(TAG, "release()");
 		sIsWriting = false;

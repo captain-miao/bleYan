@@ -7,7 +7,7 @@ package com.github.captain_miao.android.ble.constant;
 
 public class BleConstants {
 
-    //蓝牙响应消息
+    //ble response message id
     public static final int MSG_BLE_ID_CHARACTERISTIC_WRITE 		= 20000;
     public static final int MSG_BLE_ID_DESCRIPTOR_WRITE 			= 20001;
     public static final int MSG_BLE_ID_CHARACTERISTIC_NOTIFICATION 	= 20002;
@@ -19,7 +19,7 @@ public class BleConstants {
     public static final int MSG_BLE_ID_SERVICES_DISCOVERED			= 20008;
 
 
-    //蓝牙控制消息
+    //ble control message id
     public static final int MSG_CONTROL_ID_REGISTER                 = 30000;
    	public static final int MSG_CONTROL_ID_UNREGISTER               = 30001;
 	public static final int MSG_CONTROL_ID_CONNECT_DEVICE			= 30002;
@@ -28,7 +28,7 @@ public class BleConstants {
    	public static final int MSG_CONTROL_ID_STOP_SCAN                = 30005;
 
 
-    //蓝牙读写消息id
+    //ble read message id
 	public static final int MSG_CONTROL_ID_WRITE_CHARACTERISTIC		= 40000;
 	public static final int MSG_CONTROL_ID_DESCRIPTOR_NOTIFICATION  = 40001;
 	public static final int MSG_CONTROL_ID_READ_CHARACTERISTIC      = 40002;

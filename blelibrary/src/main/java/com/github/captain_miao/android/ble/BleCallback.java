@@ -9,7 +9,7 @@ import java.util.UUID;
  * @since 2015-09-14
  */
 public abstract class BleCallback {
-    public UUID uuid;//用来识别 不同uuid的消息
+    public UUID uuid;
 
     protected BleCallback(UUID uuid) {
         this.uuid = uuid;
@@ -18,7 +18,6 @@ public abstract class BleCallback {
     }
 
 
-    //失败的情况
     public void onFailed(UUID uuid, String msg){
 
     }

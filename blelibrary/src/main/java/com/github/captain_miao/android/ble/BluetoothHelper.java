@@ -23,10 +23,10 @@ import java.util.UUID;
  * @author YanLu
  * @since  2015-09-14
  *
- * 目标：
- * 1. 蓝牙的各种状态 可以回调
- * 2. 加入超时机制
- * 3. 支持 写、notify、读属性值
+ * target：
+ * 1. support ble connect status
+ * 2. support message timeout
+ * 3. support write、notify、read
  *
  */
 public abstract class BluetoothHelper implements ServiceConnection, AppHandler.HandleMessageListener<BluetoothHelper> {
@@ -36,9 +36,9 @@ public abstract class BluetoothHelper implements ServiceConnection, AppHandler.H
     protected BleCallback mBleCallback;
     private static AppHandler<BluetoothHelper> appHandler;
     public final Map<UUID, BleCallback> mCallbacks = new HashMap<>();
-	//蓝牙 处理，封装成 callback 方式
-	private Messenger mReceiveMessenger;//从BleService接消息
-	private Messenger mSendMessage = null;//发送消息给BleService
+
+	private Messenger mReceiveMessenger;//from BleService receive message
+	private Messenger mSendMessage = null;//send message to BleService
 	public BleConnectState mState = BleConnectState.INITIALED;
 
     public ConnectCallback mConnCallback;
@@ -65,7 +65,6 @@ public abstract class BluetoothHelper implements ServiceConnection, AppHandler.H
     public abstract void unbindService();
 
 
-    //连接设备
     public boolean connectDevice(String mac, final ConnectCallback connectCallback) {
         if(mState.isServiceDiscovered()){
             connectCallback.onConnectSuccess();
@@ -214,7 +213,7 @@ public abstract class BluetoothHelper implements ServiceConnection, AppHandler.H
                         mConnCallback.onConnectFailed(ConnectError.ConnectTimeout);
                         for (BleCallback callback : mCallbacks.values()) {
                             if (callback != null) {
-                                callback.onFailed("蓝牙断开连接...");
+                                callback.onFailed("ble disconnected...");
                             }
                         }
                     }

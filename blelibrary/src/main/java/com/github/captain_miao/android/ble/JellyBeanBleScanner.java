@@ -44,18 +44,18 @@ public class JellyBeanBleScanner extends BaseBleScanner {
             timeoutHandler.postDelayed(timeoutRunnable, delay);
             BleLog.i(TAG, "mBluetooth.startLeScan() " + isScanning);
         } else {
-            mScanCallback.onBleScanFailed(BleScanState.BLUETOOTH_OFF);//蓝牙 未开启
+            mScanCallback.onBleScanFailed(BleScanState.BLUETOOTH_OFF);//bluetooth is off
         }
     }
 
     @SuppressWarnings(value={"deprecation"})
     @Override
-    public void onStartBleScan( ) {//一直扫描
+    public void onStartBleScan( ) {//scan always
         if (mBluetooth != null) {
             isScanning = mBluetooth.startLeScan(leScanCallback);
             BleLog.i(TAG, "mBluetooth.startLeScan() " + isScanning);
         } else {
-            mScanCallback.onBleScanFailed(BleScanState.BLUETOOTH_OFF);//蓝牙 未开启
+            mScanCallback.onBleScanFailed(BleScanState.BLUETOOTH_OFF);//bluetooth is off
         }
     }
 

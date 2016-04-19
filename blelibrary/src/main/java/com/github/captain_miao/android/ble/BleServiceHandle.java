@@ -14,7 +14,7 @@ import java.util.UUID;
  * @author YanLu
  * @since  2015-09-14
  *
- * 蓝牙指令消息处理
+ * handle ble commend
  */
 public class BleServiceHandle extends AppHandler<BaseBleService> {
 	private final static String TAG = BleServiceHandle.class.getName();
@@ -39,8 +39,7 @@ public class BleServiceHandle extends AppHandler<BaseBleService> {
 					if (msg.replyTo != null) {
 						reference.addClient(msg.replyTo);
 					}
-					//注册成功就发送一次 蓝牙状态
-					//service.sendBleStateMessage();
+
 					break;
 				case BleConstants.MSG_CONTROL_ID_UNREGISTER:
 					BleLog.i(TAG, "client unregistered");

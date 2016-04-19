@@ -50,7 +50,7 @@ public class LollipopBleScanner extends BaseBleScanner {
             }
             timeoutHandler.postDelayed(timeoutRunnable, delay);
         } else {
-            mScanCallback.onBleScanFailed(BleScanState.BLUETOOTH_OFF);//蓝牙 未开启
+            mScanCallback.onBleScanFailed(BleScanState.BLUETOOTH_OFF);
         }
         BleLog.i(TAG, "mBluetoothScanner.startScan()");
     }
@@ -64,11 +64,11 @@ public class LollipopBleScanner extends BaseBleScanner {
                 isScanning = true;
             } catch (Exception e){
                 isScanning = false;
-                mScanCallback.onBleScanFailed(BleScanState.BLUETOOTH_OFF);//蓝牙 未开启
+                mScanCallback.onBleScanFailed(BleScanState.BLUETOOTH_OFF);
                 BleLog.e(TAG, e.toString());
             }
         } else {
-            mScanCallback.onBleScanFailed(BleScanState.BLUETOOTH_OFF);//蓝牙 未开启
+            mScanCallback.onBleScanFailed(BleScanState.BLUETOOTH_OFF);
         }
         BleLog.i(TAG, "mBluetoothScanner.startScan()");
     }
@@ -89,7 +89,7 @@ public class LollipopBleScanner extends BaseBleScanner {
 
     @Override
     public void onBleScanFailed(BleScanState scanState) {
-        mScanCallback.onBleScanFailed(scanState);//扫描设备超时~
+        mScanCallback.onBleScanFailed(scanState);
     }
 
     private ScanCallback scanCallback = new ScanCallback() {
@@ -110,7 +110,7 @@ public class LollipopBleScanner extends BaseBleScanner {
 
         @Override
         public void onScanFailed(int errorCode) {
-            //会返回 错误码 3 忽略
+            //error code 3 or 1 todo
             if(errorCode != 3 && errorCode != 1 ) {
                 BleLog.i(TAG, "onScanFailed: " + errorCode);
                 mScanCallback.onBleScanFailed(BleScanState.newInstance(errorCode));

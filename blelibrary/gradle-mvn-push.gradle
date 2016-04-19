@@ -20,13 +20,11 @@ def getSnapshotRepositoryUrl() {
 
 
 def getRepositoryUsername() {
-    println OSS_USERNAME
     return hasProperty('OSS_USERNAME') ? OSS_USERNAME : ''
 }
 
 
 def getRepositoryPassword() {
-    println OSS_PWD
     return hasProperty('OSS_PWD') ? OSS_PWD : ''
 }
 
