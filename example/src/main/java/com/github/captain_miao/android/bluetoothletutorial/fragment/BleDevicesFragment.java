@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -129,16 +128,17 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
         mAdapter.setHasFooter(false);
         mRecyclerView.setAdapter(mAdapter);
         mBleScanner = new BleScanner(getContext(), BleDevicesFragment.this);
-        checkPermissionAndStartScan();
+        //checkPermissionAndStartScan();
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        if(mBleScanner != null && mBleScanner.isScanning()){
-            checkPermissionAndStartScan();
-        }
+        //if(mBleScanner != null && mBleScanner.isScanning()){
+            // TODO: 16/4/20
+            //checkPermissionAndStartScan();
+        //}
     }
 
     @Override
@@ -182,51 +182,53 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
 
     @Override
     public void onBleScan(final BluetoothDevice device, final int rssi, final byte[] scanRecord) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                BleLog.i(TAG, device.toString() + " rssi: " + rssi);
-                String address = device.getAddress();
-                if (bleDeviceHashMap.get(address) == null) {
-                    bleDeviceHashMap.put(address, device);
-                    FavouriteInfo favourite = FavouriteInfo.getFavourite(address);
-                    BleDevice bleDevice = new BleDevice(address, device.getAddress(),
-                            rssi, HexUtil.encodeHexStr(scanRecord), favourite.isFavourite);
-                    bleDevice.aliasName = (TextUtils.isEmpty(favourite.name) ? "" : (favourite.name));
+        if(isVisible()) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    BleLog.i(TAG, device.toString() + " rssi: " + rssi);
+                    String address = device.getAddress();
+                    if (bleDeviceHashMap.get(address) == null) {
+                        bleDeviceHashMap.put(address, device);
+                        FavouriteInfo favourite = FavouriteInfo.getFavourite(address);
+                        BleDevice bleDevice = new BleDevice(address, device.getAddress(),
+                                rssi, HexUtil.encodeHexStr(scanRecord), favourite.isFavourite);
+                        bleDevice.aliasName = (TextUtils.isEmpty(favourite.name) ? "" : (favourite.name));
 
-                    mAdapter.append(bleDevice);
-                    try {
-                        mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }
-                } else {
-                    //更新rssi
-                    List<BleDevice> mList = mAdapter.getList();
-                    int i = 0;
-                    for (BleDevice bleDevice : mList) {
-
-                        if (bleDevice.address.equalsIgnoreCase(device.getAddress())) {
-                            //控制刷新
-                            long now = System.currentTimeMillis();
-                            if(rssi != bleDevice.rssi && (now - bleDevice.updateTime > 1000)) {
-                                bleDevice.updateTime = now;
-                                bleDevice.rssi = rssi;
-                                bleDevice.broadcast = HexUtil.encodeHexStr(scanRecord);
-                                try {
-                                    mAdapter.notifyItemChanged(i);
-                                } catch (Exception e){
-                                    e.printStackTrace();
-                                }
-                                //mAdapter.notifyDataSetChanged();
-                            }
-                            break;
+                        mAdapter.append(bleDevice);
+                        try {
+                            mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        i++;
+                    } else {
+                        //更新rssi
+                        List<BleDevice> mList = mAdapter.getList();
+                        int i = 0;
+                        for (BleDevice bleDevice : mList) {
+
+                            if (bleDevice.address.equalsIgnoreCase(device.getAddress())) {
+                                //控制刷新
+                                long now = System.currentTimeMillis();
+                                if (rssi != bleDevice.rssi && (now - bleDevice.updateTime > 1000)) {
+                                    bleDevice.updateTime = now;
+                                    bleDevice.rssi = rssi;
+                                    bleDevice.broadcast = HexUtil.encodeHexStr(scanRecord);
+                                    try {
+                                        mAdapter.notifyItemChanged(i);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    //mAdapter.notifyDataSetChanged();
+                                }
+                                break;
+                            }
+                            i++;
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override
@@ -262,9 +264,9 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
     @Override
    	public void onActivityResult(int requestCode, int resultCode, Intent data) {
    		if (requestCode == REQUEST_CODE_OPEN_BLE && resultCode == Activity.RESULT_OK) {
-   		    // 打开蓝牙
+   		    // open gps
             if (isGpsOPen(getContext())) {
-                checkPermissions();
+                permissionGranted();
             } else {
                 // 开启GPS
                 displayPromptForEnablingGPS();
@@ -274,38 +276,12 @@ public class BleDevicesFragment extends BaseFragment implements SimpleScanCallba
             // 开启GPS
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (bluetoothAdapter != null) {
-                checkPermissions();
+                permissionGranted();
             }
         } else {
    			super.onActivityResult(requestCode, resultCode, data);
    		}
    	}
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case AppConstants.PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay!
-                    mBleScanner.startBleScan();
-                } else {
-
-                    // permission denied, boo! Disable theSince location access has not been granted...
-                    // functionality that depends on this permission.
-                    new MaterialDialog.Builder(getActivity())
-                            .title(R.string.label_permission_denial_title)
-                            .content(R.string.label_permission_denial_content)
-                            .positiveText(R.string.label_ok)
-                            .cancelable(true)
-                            .show();
-                }
-            }
-        }
-    }
 
 
     public void displayPromptForEnablingGPS() {

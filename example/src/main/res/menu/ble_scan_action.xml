@@ -18,6 +18,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/ble_action_start"
-        android:title="@string/app_ble_scan_stop"
+        android:title="@string/app_ble_scan_start"
         app:showAsAction="always" />
 </menu>

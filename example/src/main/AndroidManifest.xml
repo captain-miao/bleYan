@@ -16,8 +16,8 @@
         <meta-data android:name="AA_DB_VERSION" android:value="3" />
         <meta-data
             android:name="AA_MODELS"
-            android:value="com.dahuo.learn.lbe.bluetoothletutorial.model.FavouriteInfo,
-                            com.dahuo.learn.lbe.bluetoothletutorial.model.BleCommandInfo" />
+            android:value="com.github.captain_miao.android.bluetoothletutorial.model.FavouriteInfo,
+                            com.github.captain_miao.android.bluetoothletutorial.model.BleCommandInfo" />
 
 
 
