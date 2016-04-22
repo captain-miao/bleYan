@@ -484,6 +484,8 @@ public class BleDeviceActivity extends BaseActivity implements View.OnClickListe
             sendIntent.setType("text/plain");
             startActivity(sendIntent);
 
+        } else {
+            AppToast.show(this, "Ble data is empty");
         }
     }
 

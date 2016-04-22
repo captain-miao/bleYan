@@ -72,21 +72,21 @@
             android:text="@string/label_notify_characteristic_data"
             android:textSize="18sp" />
 
-        <android.support.v7.widget.AppCompatButton
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/button_share"
             android:onClick="onShare"/>
 
-        <android.support.v7.widget.AppCompatButton
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/button_clear"
             android:onClick="onClear"/>
 
-        <android.support.v7.widget.AppCompatButton
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
