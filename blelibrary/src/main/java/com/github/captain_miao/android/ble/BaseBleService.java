@@ -412,7 +412,9 @@ public abstract class BaseBleService extends Service implements SimpleScanCallba
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                mGatt.disconnect();
+                if(mGatt != null) {
+                    mGatt.disconnect();
+                }
             }
         });
         mHandler.postDelayed(new Runnable() {

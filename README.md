@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-	    compile 'com.github.captain-miao:ble:1.0.0-SNAPSHOT'
+	    compile 'com.github.captain-miao:ble:1.1.0-SNAPSHOT'
 }
 ```
 

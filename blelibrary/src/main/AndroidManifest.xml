@@ -4,10 +4,10 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <!-- -->
+    <!-- for Android N -->
     <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <application android:label="@string/ble_name"
-        android:allowBackup="false">
+
+    <application >
 
     </application>
 
