@@ -1,0 +1,66 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tl="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#eeeeee"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <include layout="@layout/support_toolbar" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.flyco.tablayout.SlidingTabLayout
+                android:id="@+id/tl_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#666666"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp"
+                tl:tl_indicator_gravity="TOP"
+                tl:tl_textBold="SELECT"
+                tl:tl_underline_color="#1A000000"
+                tl:tl_underline_gravity="TOP"
+                tl:tl_underline_height="1dp"/>
+
+            <com.flyco.tablayout.SlidingTabLayout
+                android:id="@+id/tl_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#666666"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp"
+                tl:tl_indicator_gravity="TOP"
+                tl:tl_textBold="SELECT"
+                tl:tl_underline_color="#1A000000"
+                tl:tl_underline_gravity="TOP"
+                tl:tl_underline_height="1dp"/>
+
+            <com.flyco.tablayout.SlidingTabLayout
+                android:id="@+id/tl_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#666666"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp"
+                tl:tl_indicator_gravity="TOP"
+                tl:tl_textBold="SELECT"
+                tl:tl_underline_color="#1A000000"
+                tl:tl_underline_gravity="TOP"
+                tl:tl_underline_height="1dp"/>
+
+        </LinearLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+</ScrollView>
