@@ -1,66 +1,26 @@
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tl="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#eeeeee"
-    android:scrollbars="none">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <include layout="@layout/support_toolbar"/>
+
+    <com.flyco.tablayout.SlidingTabLayout
+        android:id="@+id/tl_1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <include layout="@layout/support_toolbar" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        android:layout_height="48dp"
+        android:background="@color/colorAccent"
+        tl:tl_textAllCaps="true"
+        tl:tl_textBold="BOTH"
+        tl:tl_textsize="14sp"
+        tl:tl_tab_space_equal="true"/>
 
-            <com.flyco.tablayout.SlidingTabLayout
-                android:id="@+id/tl_1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#666666"
-                android:paddingBottom="15dp"
-                android:paddingTop="15dp"
-                tl:tl_indicator_gravity="TOP"
-                tl:tl_textBold="SELECT"
-                tl:tl_underline_color="#1A000000"
-                tl:tl_underline_gravity="TOP"
-                tl:tl_underline_height="1dp"/>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
-            <com.flyco.tablayout.SlidingTabLayout
-                android:id="@+id/tl_2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#666666"
-                android:paddingBottom="15dp"
-                android:paddingTop="15dp"
-                tl:tl_indicator_gravity="TOP"
-                tl:tl_textBold="SELECT"
-                tl:tl_underline_color="#1A000000"
-                tl:tl_underline_gravity="TOP"
-                tl:tl_underline_height="1dp"/>
-
-            <com.flyco.tablayout.SlidingTabLayout
-                android:id="@+id/tl_3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#666666"
-                android:paddingBottom="15dp"
-                android:paddingTop="15dp"
-                tl:tl_indicator_gravity="TOP"
-                tl:tl_textBold="SELECT"
-                tl:tl_underline_color="#1A000000"
-                tl:tl_underline_gravity="TOP"
-                tl:tl_underline_height="1dp"/>
-
-        </LinearLayout>
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/vp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>

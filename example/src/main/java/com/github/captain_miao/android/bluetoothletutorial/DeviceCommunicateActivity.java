@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
@@ -47,10 +46,10 @@ public class DeviceCommunicateActivity extends BaseActivity implements OnTabSele
 
 
         mDevice = (BleDevice) getIntent().getSerializableExtra(AppConstants.KEY_BLE_DEVICE);
-        mDeviceName = TextUtils.isEmpty(mDevice.name) ? mDevice.address : mDevice.name;
-        mDeviceAddress = mDevice.address;
+        //mDeviceName = TextUtils.isEmpty(mDevice.name) ? mDevice.address : mDevice.name;
+        //mDeviceAddress = mDevice.address;
 
-        setTitle(mDeviceName);
+        //setTitle(mDeviceName);
 
 
         for (String title : mTitles) {
@@ -63,17 +62,11 @@ public class DeviceCommunicateActivity extends BaseActivity implements OnTabSele
         vp.setAdapter(mAdapter);
 
         SlidingTabLayout tabLayout_1 = (SlidingTabLayout) findViewById(R.id.tl_1);
-        SlidingTabLayout tabLayout_2 = (SlidingTabLayout) findViewById(R.id.tl_2);
-        SlidingTabLayout tabLayout_3 = (SlidingTabLayout) findViewById(R.id.tl_3);
 
 
-        tabLayout_1.setViewPager(vp);
-        tabLayout_2.setViewPager(vp);
-        tabLayout_3.setViewPager(vp);
+        tabLayout_1.setViewPager(vp, mTitles, this, mFragments);
 
         tabLayout_1.setOnTabSelectListener(this);
-        tabLayout_2.setOnTabSelectListener(this);
-        tabLayout_3.setOnTabSelectListener(this);
 
         vp.setCurrentItem(0);
     }
