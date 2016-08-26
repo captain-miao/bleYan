@@ -22,7 +22,7 @@
 
 
         <activity
-            android:name="com.github.captain_miao.android.bluetoothletutorial.HomeActivity"
+            android:name="com.github.captain_miao.android.bluetoothletutorial.DeviceCommunicateActivity"
             android:label="@string/app_name"
             android:theme="@style/AppNavigationDrawerTheme"
             android:screenOrientation="portrait">

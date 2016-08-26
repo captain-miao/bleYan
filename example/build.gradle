@@ -59,14 +59,14 @@ dependencies {
     compile 'com.mikepenz:iconics-core:1.7.6@aar'
     compile 'com.mikepenz:fontawesome-typeface:4.4.0.1@aar'
     compile 'com.mikepenz:google-material-typeface:1.2.0.1@aar'
-    compile 'com.github.captain-miao:grantap:1.0.0-SNAPSHOT@aar'
     compile('com.mikepenz:aboutlibraries:5.2.2@aar') {
         transitive = true
     }
     compile 'com.lovedise:permissiongen:0.0.6'
     compile 'com.flyco.tablayout:FlycoTabLayout_Lib:2.0.8@aar'
 
-
+    compile 'com.github.captain-miao:grantap:1.0.0-SNAPSHOT@aar'
+    compile 'com.github.captain-miao:recyclerviewutils:1.2.4'
 
 //    compile 'com.github.captain-miao:ble:1.0.0-SNAPSHOT'
     compile project(':blelibrary')
