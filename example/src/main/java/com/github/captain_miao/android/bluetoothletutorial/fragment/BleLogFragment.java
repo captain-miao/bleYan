@@ -26,9 +26,9 @@ public class BleLogFragment extends BleFragment {
     }
 
     public static BleLogFragment getInstance(String title) {
-        BleLogFragment sf = new BleLogFragment();
-        sf.mTitle = title;
-        return sf;
+        BleLogFragment frg = new BleLogFragment();
+        frg.mTitle = title;
+        return frg;
     }
 
     @Override

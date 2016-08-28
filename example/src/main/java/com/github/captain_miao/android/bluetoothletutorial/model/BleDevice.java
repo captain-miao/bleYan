@@ -12,7 +12,7 @@ public class BleDevice extends BaseModel {
     public String aliasName;
     public String address;
     public String broadcast;
-    public long   updateTime;//广播包 更新时间,1分钟没有广播包 变灰
+    public long   updateTime;// receive broadcast message time
     public int rssi;
     public boolean isConnected;
     public boolean isFavourite;
