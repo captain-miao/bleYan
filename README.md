@@ -1,7 +1,6 @@
 # bleYan
 It's a simple BLE library.    
-Android apk download:http://fir.im/bleYan    
-For iOS (BabyBluetooth) https://github.com/coolnameismy/BabyBluetooth   
+Android apk download:http://fir.im/bleYan      
 ##  FF. bleYan tools
 ![ble_yan_screenshot](/screenshot/screenshot.jpg?raw=true "ble_scan_screenshot")
 
@@ -152,6 +151,5 @@ mBleHelper = new AppBluetoothHelper(Context context, BleCallback bleCallback);
 ##4.release Bluetooth Device
 ```
 	mBleHelper.release();
-```
-usage(Chinese):https://yanlu.me/android-bluetooth-low-energy/  
+``` 
 apk download:http://fir.im/bleYan  
